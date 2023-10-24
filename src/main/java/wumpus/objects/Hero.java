@@ -1,14 +1,28 @@
 package wumpus.objects;
 
 public class Hero {
-    int row;
-    int col;
-    int arrows;
-    public Hero(int row, int col, int arrows) {
+    private int row;
+    private int col;
+    private int arrows;
+    public enum dir{N, E, S, W};
+    private boolean hasGold;
+
+    public Hero(int row, int col, int arrows, boolean hasGold) {
         this.row = row;
         this.col = col;
         this.arrows = arrows;
+        this.hasGold = hasGold;
     }
+
+
+    public boolean isHasGold() {
+        return hasGold;
+    }
+
+    public void setHasGold(boolean hasGold) {
+        this.hasGold = hasGold;
+    }
+
 
     public int getRow() {
         return row;
@@ -34,12 +48,12 @@ public class Hero {
         this.arrows = arrows;
     }
 
-    public String heroOnMap(){
+    public String heroOnMap() {
         return "H";
     }
 
     public boolean equals(String c) {
-        if(heroOnMap().equals(c)) return true;
+        if (heroOnMap().equals(c)) return true;
         return false;
     }
 

@@ -3,8 +3,8 @@ package wumpus.objects;
 import java.util.Objects;
 
 public class Gold {
-    int row;
-    int col;
+    private int row;
+    private int col;
 
     public Gold(int row, int col) {
         this.row = row;

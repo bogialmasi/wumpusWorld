@@ -3,8 +3,8 @@ package wumpus.objects;
 import java.util.Objects;
 
 public class Pit {
-    int row;
-    int col;
+    private int row;
+    private int col;
 
     public Pit(int row, int col) {
         this.row = row;
