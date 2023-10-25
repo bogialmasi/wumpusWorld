@@ -4,7 +4,7 @@ public class Hero {
     private int row;
     private int col;
     private int arrows;
-    public enum dir{N, E, S, W};
+
     private boolean hasGold;
 
     public Hero(int row, int col, int arrows, boolean hasGold) {

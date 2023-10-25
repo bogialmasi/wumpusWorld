@@ -1,11 +1,9 @@
 package wumpus.validator;
 
-import wumpus.service.MapLoader;
+import wumpus.exceptions.InvalidSizeException;
+import wumpus.world.World;
 
-public class MapValidator {
-    MapLoader mapLoader = new MapLoader();
-    public void validateRows(){
-    }
-    public void validateColumns(){
-    }
+public interface MapValidator {
+    void validateSizeOfMap(World world) throws InvalidSizeException;
+    void validateContentOfMap(World world);
 }
