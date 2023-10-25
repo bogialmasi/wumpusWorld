@@ -1,43 +1,36 @@
 package wumpus.objects;
 
-public class Hero {
-    private int row;
-    private int col;
-    private int arrows;
+import java.awt.*;
 
+public class Hero {
+    private Point pos;
+    private int arrows;
     private boolean hasGold;
 
-    public Hero(int row, int col, int arrows, boolean hasGold) {
-        this.row = row;
-        this.col = col;
+    public Hero(Point pos) {
+        this.pos = pos;
+    }
+
+    public Hero(Point pos, int arrows, boolean hasGold) {
+        this.pos = pos;
         this.arrows = arrows;
         this.hasGold = hasGold;
     }
 
+    public Point getPos() {
+        return pos;
+    }
 
-    public boolean isHasGold() {
+    public void setPos(Point pos) {
+        this.pos = pos;
+    }
+
+    public boolean hasGold() {
         return hasGold;
     }
 
     public void setHasGold(boolean hasGold) {
         this.hasGold = hasGold;
-    }
-
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
     }
 
     public int getArrows() {
@@ -55,13 +48,5 @@ public class Hero {
     public boolean equals(String c) {
         if (heroOnMap().equals(c)) return true;
         return false;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("Hero stats:\n");
-        sb.append("The hero stands on ").append(row).append(" ").append(col).append(" position.");
-        sb.append("The hero has ").append(arrows).append(" pcs of arrow(s)");
-        return sb.toString();
     }
 }

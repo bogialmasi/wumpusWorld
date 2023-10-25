@@ -1,14 +1,27 @@
 package wumpus.menu;
 
 import wumpus.exceptions.InvalidInputException;
+import wumpus.exceptions.InvalidSizeException;
 import wumpus.service.MapReader;
+import wumpus.validator.IMapValidator;
+import wumpus.validator.MapValidator;
 import wumpus.world.World;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MainMenu implements MenuOptions {
-    Scanner sc = null;
-    World playMap = null;
+    Scanner sc;
+    World world;
+    private IMapValidator mapValidator = new MapValidator();
+
+
+    BufferedReader bufferedReader;
+
+    public MainMenu(BufferedReader bufferedReader) {
+        this.bufferedReader = bufferedReader;
+    }
 
     public void startMenu() throws InvalidInputException {
         System.out.println("*** WELCOME TO WUMPUS WORLD ! ***");
@@ -67,21 +80,22 @@ public class MainMenu implements MenuOptions {
     }
 
     @Override
-    public void uploadFromFile() throws InvalidInputException {
-        MapReader mapReader = new MapReader();
-        playMap = mapReader.readMap();
-        if (playMap == null) {
+    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException {
+        MapReader mapReader = new MapReader(mapValidator,bufferedReader);
+        world = mapReader.readMap();
+        if (world == null) {
             System.out.println("An error occured. Please try again!");
         } else {
             System.out.println("Map loaded succesfully. Ready to play.");
         }
+
         backToMenu();
     }
 
     @Override
     public void playGame() throws InvalidInputException {
-        if (playMap != null) {
-            // IMPLEMENT GAME STARTER
+        if (world != null) {
+            //TODO IMPLEMENT GAME STARTER
         } else {
             System.out.println("Load a map first to play!");
             backToMenu();
@@ -110,7 +124,5 @@ public class MainMenu implements MenuOptions {
         System.out.println("*** GOOD BYE ! ***");
         System.exit(0);
     }
-
-
 }
 

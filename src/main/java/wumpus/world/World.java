@@ -1,66 +1,36 @@
 package wumpus.world;
 
-import static ch.qos.logback.core.joran.JoranConstants.NULL;
+import wumpus.objects.*;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class World {
-    private int size;
-    private String world[][];
-    private int row = 1;
-    private int col = 1;
+    private int N;
     private boolean gameOver = false;
+
+    private int row;
+    private int col;
+
+    public ArrayList<Wall> walls;
+    public ArrayList<Wumpus> wumpuses;
+    public ArrayList<Pit> pits;
+    public ArrayList<Point> emptyFields;
+    public Gold gold;
+    public Hero hero;
+
 
     // hero's directions
     //public enum dir {N, E, S, W}
 
     //public enum go {UP, DOWN, LEFT, RIGHT}
 
-    public World(int size) {
-        this.size = size;
-        world = new String[size + 1][size + 1];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                world[i][j] = NULL;
-            }
-        }
+
+    public World() {
     }
 
-    public World(int size, String[][] world, int row, int col) {
-        this.size = size;
-        this.world = world;
-        this.row = row;
-        this.col = col;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public String[][] getWorld() {
-        return world;
-    }
-
-    public void setWorld(String[][] world) {
-        this.world = world;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
+    public int getN() {
+        return N;
     }
 
     public boolean isGameOver() {
