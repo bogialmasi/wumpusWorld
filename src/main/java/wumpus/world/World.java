@@ -10,9 +10,9 @@ public class World {
     private boolean gameOver = false;
 
     // hero's directions
-    public enum dir {N, E, S, W}
+    //public enum dir {N, E, S, W}
 
-    public enum go {UP, DOWN, LEFT, RIGHT}
+    //public enum go {UP, DOWN, LEFT, RIGHT}
 
     public World(int size) {
         this.size = size;
@@ -70,4 +70,11 @@ public class World {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+    /*
+    public boolean isWall(){}
+    public boolean isHero(){}
+    public boolean isWumpus(){}
+    public boolean isGold(){}
+    public boolean isPit(){}
+    */
 }

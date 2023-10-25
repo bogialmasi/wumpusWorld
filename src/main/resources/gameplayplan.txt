@@ -1,0 +1,9 @@
+1. start menu
+2. load from file -> if happened, "file loaded"
+3. mapReader -> mapValidator -> World
+4. start playing on the map
+ - events written in txt before showing the new state of the map
+    f.e. "gold secured!"/"fallen into pit, one arrow lost"/"wumpus shot"
+ - the directions of the hero and the movements have to be changed separately
+    the hero doesn't have to look the way they are going
+ -
