@@ -2,22 +2,11 @@ package wumpus.objects;
 
 import java.awt.*;
 
-public class Gold {
-    private Point pos;
-
-    public Gold() {
-
-    }
+public class Gold extends GameObject {
 
     public Gold(Point pos) {
-        this.pos = pos;
+        super(pos);
     }
 
-    public Point getPos() {
-        return pos;
-    }
 
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
 }

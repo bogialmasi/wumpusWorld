@@ -1,5 +1,7 @@
 package wumpus.service;
 
+import wumpus.exceptions.HeroException;
+import wumpus.exceptions.InvalidObjectAmountException;
 import wumpus.exceptions.InvalidSizeException;
 import wumpus.objects.*;
 import wumpus.validator.IMapValidator;
@@ -21,7 +23,7 @@ public class MapReader implements IMapReader {
         this.reader = reader;
     }
 
-    public World readMap() throws InvalidSizeException, IOException {
+    public World readMap() throws InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, HeroException {
         World world = null;
         int row = 0;
         try {

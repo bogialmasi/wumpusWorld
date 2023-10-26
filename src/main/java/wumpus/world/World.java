@@ -26,6 +26,30 @@ public class World {
     //public enum go {UP, DOWN, LEFT, RIGHT}
 
 
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
+    public ArrayList<Wumpus> getWumpuses() {
+        return wumpuses;
+    }
+
+    public ArrayList<Pit> getPits() {
+        return pits;
+    }
+
+    public ArrayList<Point> getEmptyFields() {
+        return emptyFields;
+    }
+
+    public Gold getGold() {
+        return gold;
+    }
+
+    public Hero getHero() {
+        return hero;
+    }
+
     public World() {
     }
 

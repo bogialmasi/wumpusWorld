@@ -1,6 +1,8 @@
 package wumpus.menu;
 
+import wumpus.exceptions.HeroException;
 import wumpus.exceptions.InvalidInputException;
+import wumpus.exceptions.InvalidObjectAmountException;
 import wumpus.exceptions.InvalidSizeException;
 import wumpus.service.MapReader;
 import wumpus.validator.IMapValidator;
@@ -80,7 +82,7 @@ public class MainMenu implements MenuOptions {
     }
 
     @Override
-    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException {
+    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, HeroException {
         MapReader mapReader = new MapReader(mapValidator,bufferedReader);
         world = mapReader.readMap();
         if (world == null) {
