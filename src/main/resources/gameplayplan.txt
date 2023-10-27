@@ -1,6 +1,14 @@
+// FIRST PART
 1. start menu
 2. load from file -> if happened, "file loaded"
-3. mapReader -> mapValidator -> World
+3. mapReaderImpl, reads file
+   -> mapValidator (->MapContentValidator), validate file content
+   -> World creates playable world from the file(map), create objects with their respective poisitons given by the file(map)
+   -> GameStarter, displays the starting state of the world and the hero's data
+
+
+
+// SECOND PART
 4. start playing on the map
  - events written in txt before showing the new state of the map
     f.e. "gold secured!"/"fallen into pit, one arrow lost"/"wumpus shot"

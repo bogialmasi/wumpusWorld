@@ -1,5 +1,7 @@
 package wumpus;
 
+import wumpus.exceptions.HeroException;
+
 public class Constants {
     public static final String GOLD = "G";
     public static final String HERO = "H";
@@ -12,5 +14,7 @@ public class Constants {
     public static final String WEST = "W";
     public static final String SOUTH = "S";
     public static final String NORTH = "N";
+
+
 
 }

@@ -40,6 +40,10 @@ public class MapReaderImpl implements MapReader {
     }
 
 
+    public int osszead(int x, int y) {
+        return x + y;
+    }
+
     public World readMap() throws InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, InvalidPositionException, InvalidInputException {
         int row = 0;
         Hero hero;
@@ -54,7 +58,6 @@ public class MapReaderImpl implements MapReader {
             int heroRow = Integer.parseInt(worldData[2]);
             Direction heroDir = parseHeroDir(worldData[3]);
             world = new World(mapSize);
-
 
             hero = new Hero(new Point(heroRow, heroCol), heroDir);
             line = reader.readLine();
