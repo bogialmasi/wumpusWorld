@@ -2,8 +2,6 @@ package wumpus;
 
 import wumpus.exceptions.InvalidInputException;
 import wumpus.menu.MainMenuImpl;
-import wumpus.validator.MapContentValidator;
-import wumpus.validator.MapContentValidatorImpl;
 import wumpus.validator.MapValidator;
 import wumpus.validator.MapValidatorImpl;
 
@@ -18,8 +16,7 @@ public class Main {
     public static final String MAP_FILE_PATH = "src/main/resources/wumpuszinput.txt";
     public static void main(String[] args) throws InvalidInputException, FileNotFoundException{
         BufferedReader reader = new BufferedReader(new FileReader(MAP_FILE_PATH));
-        MapContentValidator mapContentValidator = new MapContentValidatorImpl();
-        MapValidator mapValidator = new MapValidatorImpl(mapContentValidator);
+        MapValidator mapValidator = new MapValidatorImpl();
         MainMenuImpl mainMenuImpl = new MainMenuImpl(reader, mapValidator);
         mainMenuImpl.startMenu();
 

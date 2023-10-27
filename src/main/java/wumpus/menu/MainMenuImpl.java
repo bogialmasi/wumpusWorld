@@ -3,9 +3,7 @@ package wumpus.menu;
 import wumpus.exceptions.*;
 import wumpus.service.MapReaderImpl;
 import wumpus.validator.HeroValidator;
-import wumpus.validator.MapContentValidator;
 import wumpus.validator.MapValidator;
-import wumpus.validator.MapValidatorImpl;
 import wumpus.world.World;
 
 import java.io.BufferedReader;

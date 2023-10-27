@@ -55,7 +55,7 @@ public class MapReaderImpl implements MapReader {
             }
             mapSize = Integer.parseInt(worldData[0]);
             int heroCol = (int) worldData[1].charAt(0) % Constants.ASCII_STARTINGPOINT;
-            int heroRow = Integer.parseInt(worldData[2]);
+            int heroRow = Integer.parseInt(worldData[2])-1;
             Direction heroDir = parseHeroDir(worldData[3]);
             world = new World(mapSize);
 

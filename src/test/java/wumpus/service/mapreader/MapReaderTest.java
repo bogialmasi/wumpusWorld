@@ -7,9 +7,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wumpus.Constants;
 import wumpus.exceptions.*;
+import wumpus.objects.Direction;
+import wumpus.objects.GameObject;
 import wumpus.objects.Hero;
 import wumpus.service.MapReaderImpl;
 import wumpus.validator.HeroValidator;
+import wumpus.validator.HeroValidatorImpl;
+import wumpus.validator.MapContentValidatorImpl;
 import wumpus.validator.MapValidatorImpl;
 import wumpus.world.World;
 
@@ -17,12 +21,9 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MapReaderTest {
@@ -34,12 +35,14 @@ public class MapReaderTest {
     MapReaderImpl mapReaderImpl;
 
     @BeforeEach
-    public void setup() throws IOException, InvalidObjectAmountException, InvalidSizeException, InvalidPositionException {
+    public void setup() {
+        mapValidator = new MapValidatorImpl();
+        heroValidator = new HeroValidatorImpl();
         mapReaderImpl = new MapReaderImpl(mapValidator, bufferedReaderMock, heroValidator);
     }
 
     @Test()
-    public void readMap_FirstRowInvalid() throws IOException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+    public void readMap_FirstRowInvalid() throws IOException {
         // given
         given(bufferedReaderMock.readLine()).willReturn("6B5E");
 
@@ -51,11 +54,10 @@ public class MapReaderTest {
     }
 
     @Test()
-    public void readMap_InvalidSecondRow() throws InvalidSizeException, IOException, InvalidObjectAmountException {
+    public void readMap_InvalidSecondRow() throws IOException {
         // given
         String exMsg = "Column size is invalid!";
         given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWW");
-        doThrow(new InvalidSizeException(exMsg)).when(mapValidator).validateColumnSize(any(Integer.class), any(Integer.class));
 
         // when
         InvalidSizeException ex = assertThrows(InvalidSizeException.class, () -> mapReaderImpl.readMap());
@@ -77,15 +79,9 @@ public class MapReaderTest {
     }
 
     @Test
-    public void readMap_HappyCase() throws IOException, InvalidSizeException, InvalidInputException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+    public void readMap_HappyCase_NoHeroOnMap() throws IOException, InvalidSizeException, InvalidInputException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         // given
         given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W__P_W", "WWWWWW", null);
-        given(mapValidator.validateAmountOfWumpuses(any(World.class))).willReturn(1);
-        doNothing().when(mapValidator).validateColumnSize(anyInt(), anyInt());
-        doNothing().when(mapValidator).validateGold(any(World.class));
-        doNothing().when(mapValidator).validateRowSize(any(Integer.class), any(Integer.class));
-        doNothing().when(mapValidator).validateSizeOfMap(any(Integer.class), any(World.class));
-        doNothing().when(mapValidator).validateWallsOnEdgesOfMap(any(World.class));
 
         // when
         World world = mapReaderImpl.readMap();
@@ -98,30 +94,60 @@ public class MapReaderTest {
     }
 
     @Test
-    public void readMap_HeroInInputFile() throws InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, IOException, InvalidPositionException {
+    public void readMap_HeroInInputFile_WrongPosition() throws IOException {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W___W", "WH_P_W", "WWWWWW", null);
-        doNothing().when(mapValidator).validateHero(any(World.class));
-        doNothing().when(mapValidator).isThereAnythingOnThisPosition(any(Point.class), any(World.class));
-        doNothing().when(heroValidator).validateHeroPosition(any(Hero.class), any(World.class), anyInt(), anyInt());
-        doNothing().when(heroValidator).validateHeroStartingPosition(any(Point.class), any(Point.class));
-        given(mapValidator.validateAmountOfWumpuses(any(World.class))).willReturn(1);
-        doNothing().when(mapValidator).validateColumnSize(anyInt(), anyInt());
-        doNothing().when(mapValidator).validateGold(any(World.class));
-        doNothing().when(mapValidator).validateRowSize(any(Integer.class), any(Integer.class));
-        doNothing().when(mapValidator).validateSizeOfMap(any(Integer.class), any(World.class));
-        doNothing().when(mapValidator).validateWallsOnEdgesOfMap(any(World.class));
+        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W_HP_W", "WWWWWW", null);
+
+        // when
+        // SUT
+        InvalidPositionException exception = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap());
+
+        // then
+        assertEquals("Hero is not on the given starting position on the map.", exception.getMessage());
+    }
+
+    @Test
+    public void readMap_HappyCase_HeroOnMap() throws IOException, InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+        // given
+        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "WH_P_W", "WWWWWW", null);
 
         // when
         // SUT
         World world = mapReaderImpl.readMap();
 
         // then
+        Point heroPosition = world.getHero().getPos();
+        Point goldPosition = world.getGold().getPos();
+
         assertEquals(world.getN(), 6);
         assertEquals(world.getWalls().size(), 20);
         assertEquals(world.getPits().size(), 3);
         assertEquals(world.getEmptyFields().size(), 10);
         assertEquals(world.getHero().getType(), Constants.HERO);
         assertEquals(world.getGold().getType(), Constants.GOLD);
+        AssertMap(world.map);
+        AssertHero(world.getHero());
+        AssertGold(world.getGold());
+    }
+
+    void AssertMap(String[][] map) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                assertNotEquals(null, map[i][j]);
+            }
+        }
+    }
+
+    void AssertHero(GameObject object) {
+        Hero hero = (Hero) object;
+        assertNotNull(hero);
+        assertEquals(1, hero.getArrows());
+        assertEquals(new Point(4,1), hero.getPos());
+        assertEquals(Direction.E, hero.getDir());
+        assertFalse(hero.hasGold());
+    }
+
+    void AssertGold(GameObject object) {
+        assertEquals(new Point(2,2), object.getPos());
     }
 }

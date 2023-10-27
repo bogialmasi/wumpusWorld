@@ -9,7 +9,7 @@ public class Constants {
     public static final String EMPTY = "_";
     public static final String PIT = "P";
     public static final String WALL = "W";
-    public static final int ASCII_STARTINGPOINT = 64;
+    public static final int ASCII_STARTINGPOINT = 65;
     public static final String EAST = "E";
     public static final String WEST = "W";
     public static final String SOUTH = "S";

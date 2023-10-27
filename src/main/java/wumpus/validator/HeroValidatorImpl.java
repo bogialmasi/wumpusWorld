@@ -10,18 +10,18 @@ import java.awt.*;
 public class HeroValidatorImpl implements HeroValidator {
     @Override
     public void validateHeroPosition(Hero hero, World world, int row, int col) throws HeroException {
-        if (row >= world.getN() || row <= 1) {
+        if (row >= world.getN()-1 || row <= 0) {
             throw new HeroException("The Hero is standing in an invalid row");
         }
-        if (col >= world.getN() || col <= 1) {
+        if (col >= world.getN()-1 || col <= 0) {
             throw new HeroException("The Hero is standing in an invalid column");
         }
     }
 
     @Override
     public void validateHeroStartingPosition(Point startingPoint, Point heroPosition) throws InvalidPositionException {
-        if (startingPoint != heroPosition) {
-            throw new InvalidPositionException("Hero is not on the given starting position on the map. hehe.");
+        if (!startingPoint.equals(heroPosition)) {
+            throw new InvalidPositionException("Hero is not on the given starting position on the map.");
         }
     }
 
