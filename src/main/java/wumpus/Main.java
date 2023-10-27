@@ -1,7 +1,11 @@
 package wumpus;
 
 import wumpus.exceptions.InvalidInputException;
-import wumpus.menu.MainMenu;
+import wumpus.menu.MainMenuImpl;
+import wumpus.validator.MapContentValidator;
+import wumpus.validator.MapContentValidatorImpl;
+import wumpus.validator.MapValidator;
+import wumpus.validator.MapValidatorImpl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,11 +13,15 @@ import java.io.FileReader;
 
 public class Main {
 
-    public static final String MapFilePath = "src/main/resources/wumpuszinput.txt"; //TODO find a way to close this and be testable as well
-    public static void main(String[] args) throws InvalidInputException, FileNotFoundException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(MapFilePath));
 
-        MainMenu mainMenu = new MainMenu(bufferedReader);
-        mainMenu.startMenu();
+    //TODO find a way to close this and be testable as well
+    public static final String MAP_FILE_PATH = "src/main/resources/wumpuszinput.txt";
+    public static void main(String[] args) throws InvalidInputException, FileNotFoundException{
+        BufferedReader reader = new BufferedReader(new FileReader(MAP_FILE_PATH));
+        MapContentValidator mapContentValidator = new MapContentValidatorImpl();
+        MapValidator mapValidator = new MapValidatorImpl(mapContentValidator);
+        MainMenuImpl mainMenuImpl = new MainMenuImpl(reader, mapValidator);
+        mainMenuImpl.startMenu();
+
     }
 }
