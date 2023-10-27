@@ -1,7 +1,10 @@
 package wumpus.validator;
 
 import wumpus.Constants;
-import wumpus.exceptions.*;
+import wumpus.exceptions.InvalidInputException;
+import wumpus.exceptions.InvalidObjectAmountException;
+import wumpus.exceptions.InvalidPositionException;
+import wumpus.exceptions.InvalidSizeException;
 import wumpus.objects.GameObject;
 import wumpus.objects.Wall;
 import wumpus.world.World;
@@ -64,18 +67,15 @@ public class MapValidatorImpl implements MapValidator {
     public void validateWallsOnEdgesOfMap(World world) throws InvalidPositionException {
         InvalidPositionException ipe = new InvalidPositionException("The edges of the world must be walls");
         for (GameObject gameObject : world.getGameObjects()) {
-            int objectY = (int)gameObject.getPos().getY();
-            int objectX = (int)gameObject.getPos().getX();
+            int objectY = (int) gameObject.getPos().getY();
+            int objectX = (int) gameObject.getPos().getX();
             if (objectY == 0 && !(gameObject instanceof Wall)) { // first column
                 throw ipe;
-            } else
-            if (objectY == world.getN() && !(gameObject instanceof Wall)) { // last column
+            } else if (objectY == world.getN() && !(gameObject instanceof Wall)) { // last column
                 throw ipe;
-            } else
-            if (objectX == 0 && !(gameObject instanceof Wall)) { // first row
+            } else if (objectX == 0 && !(gameObject instanceof Wall)) { // first row
                 throw ipe;
-            } else
-            if (objectX == world.getN() && !(gameObject instanceof Wall)) { // last row
+            } else if (objectX == world.getN() && !(gameObject instanceof Wall)) { // last row
                 throw ipe;
             }
         }
@@ -88,14 +88,6 @@ public class MapValidatorImpl implements MapValidator {
                 throw new InvalidObjectAmountException("There is already a hero created.");
             }
         }
-
-
-        /*
-        if (world.getHero().getArrows() != world.getWumpuses().size()) {
-            validateAmountOfWumpuses(world);
-            throw new HeroException("The Hero has incorrect amount of arrows.");
-        }
-        // check that hero stands on correct position, not on walls or on wumpus, starting pos is not on gold or pit either*/
     }
 
     @Override
@@ -114,7 +106,9 @@ public class MapValidatorImpl implements MapValidator {
             int objectX = (int) world.gameObjects.get(i).getPos().getX();
             int objectY = (int) world.gameObjects.get(i).getPos().getY();
             if (objectX == pos.getX() && objectY == pos.getY()) {
-                throw new InvalidPositionException("Something already on this position: (" + objectX + "," + objectY + ")");
+                if (!world.gameObjects.get(i).getType().equals(Constants.EMPTY)) {
+                    throw new InvalidPositionException("Something already on this position: (" + objectX + "," + objectY + ")");
+                }
             }
         }
     }
@@ -130,7 +124,5 @@ public class MapValidatorImpl implements MapValidator {
             throw new InvalidInputException("Hero cannot be placed on filled spot.");
         }
     }
-
-
 }
 

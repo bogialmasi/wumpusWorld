@@ -13,7 +13,6 @@ import wumpus.objects.Hero;
 import wumpus.service.MapReaderImpl;
 import wumpus.validator.HeroValidator;
 import wumpus.validator.HeroValidatorImpl;
-import wumpus.validator.MapContentValidatorImpl;
 import wumpus.validator.MapValidatorImpl;
 import wumpus.world.World;
 
