@@ -15,15 +15,8 @@ public class GameObject {
         return type;
     }
 
-    public void setType(String type) {
-        type = type;
-    }
-
     public Point getPos() {
         return pos;
     }
 
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
 }

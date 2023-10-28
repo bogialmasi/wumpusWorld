@@ -10,11 +10,10 @@ import wumpus.exceptions.InvalidObjectAmountException;
 import wumpus.exceptions.InvalidPositionException;
 import wumpus.exceptions.InvalidSizeException;
 import wumpus.model.objects.GameObject;
-import wumpus.model.objects.Pit;
 import wumpus.model.objects.Wall;
+import wumpus.model.objects.World;
 import wumpus.model.objects.Wumpus;
 import wumpus.service.validator.impl.MapValidatorImpl;
-import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.util.ArrayList;

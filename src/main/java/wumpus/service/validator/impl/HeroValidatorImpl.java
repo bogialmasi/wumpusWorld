@@ -2,7 +2,6 @@ package wumpus.service.validator.impl;
 
 import wumpus.exceptions.HeroException;
 import wumpus.exceptions.InvalidPositionException;
-import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
 import wumpus.service.validator.HeroValidator;
 
@@ -27,33 +26,4 @@ public class HeroValidatorImpl implements HeroValidator {
             throw new InvalidPositionException("Hero is not on the given starting position on the map.");
         }
     }
-
-    /*
-
-    TODO use these methods to validate hero once hero is in gameplay
-
-    @Override
-    public boolean canHeroGoThere(String[][] goToSquare) {
-        return false;
-    }
-
-    @Override
-    public int numOfArrows() {
-        return 0;
-    }
-
-    @Override
-    public boolean isHeroAlive() {
-        return false;
-    }
-
-    @Override
-    public boolean isHeroShootingWall() {
-        return false;
-    }
-
-    @Override
-    public boolean doesHeroHaveTheGold() {
-        return false;
-    }*/
 }

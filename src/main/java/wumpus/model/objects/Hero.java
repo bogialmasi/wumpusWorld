@@ -10,9 +10,6 @@ public class Hero extends GameObject {
     private boolean hasGold;
     private Direction dir;
 
-    public boolean isHasGold() {
-        return hasGold;
-    }
 
     public void setDir(Direction dir) {
         this.dir = dir;

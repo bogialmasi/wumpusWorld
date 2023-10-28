@@ -75,7 +75,7 @@ public class GamePlayerImpl implements GamePlayer {
                 "\npick a command!:");
     }
 
-    public void BackToMainMenu() {
+    public void backToMainMenu() {
         mainMenu.chooseMenu();
     }
 }

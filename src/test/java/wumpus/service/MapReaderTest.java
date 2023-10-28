@@ -10,18 +10,17 @@ import wumpus.exceptions.*;
 import wumpus.model.objects.Direction;
 import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Hero;
+import wumpus.model.objects.World;
 import wumpus.service.map.impl.MapReaderImpl;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.impl.HeroValidatorImpl;
 import wumpus.service.validator.impl.MapValidatorImpl;
-import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +29,6 @@ public class MapReaderTest {
     HeroValidator heroValidator;
     @Mock
     BufferedReader bufferedReaderMock;
-    //system under test SUT
     MapReaderImpl mapReaderImpl;
 
     @BeforeEach
@@ -101,7 +99,6 @@ public class MapReaderTest {
         given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W_HP_W", "WWWWWW", null);
 
         // when
-        // SUT
         InvalidPositionException exception = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap());
 
         // then
@@ -114,7 +111,6 @@ public class MapReaderTest {
         given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "WH_P_W", "WWWWWW", null);
 
         // when
-        // SUT
         World world = mapReaderImpl.readMap();
 
         // then

@@ -49,8 +49,8 @@ public class MapReaderImpl implements MapReader {
         try {
             String line = reader.readLine();
             String[] header = line.split(" ");
-            ValidateHeaderData(header);
-            worldData = ParseHeaderData(header);
+            validateHeaderData(header);
+            worldData = parseHeaderData(header);
 
             world = new World(worldData.getMapSize());
 
@@ -110,7 +110,7 @@ public class MapReaderImpl implements MapReader {
                             if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
                                 world.gameObjects.add(new GameObject(actualPosition, Constants.EMPTY));
                                 world.map[row][column] = Constants.EMPTY;
-                            } // else ág nincs, mert ez azt jelenti h a Herot rátettük a pályára. Így az empty nem írja felül a Herot az inputból. Mivel csak az empty-re tehető Hero, ezért ennél az egynél nem dobunk invalid exceptiont.
+                            } // else = gero gets put on the map where empty is. no need for exception
                         }
                         default -> {
                         }
@@ -131,7 +131,7 @@ public class MapReaderImpl implements MapReader {
         return world;
     }
 
-    private WorldData ParseHeaderData(String[] header) throws InvalidPositionException {
+    private WorldData parseHeaderData(String[] header) throws InvalidPositionException {
         int mapSize = Integer.parseInt(header[0]);
         int heroCol = (int) header[1].charAt(0) % Constants.ASCII_STARTINGPOINT;
         int heroRow = Integer.parseInt(header[2]) - 1;
@@ -141,7 +141,7 @@ public class MapReaderImpl implements MapReader {
         return new WorldData(mapSize, heroRow, heroCol, heroDir);
     }
 
-    private void ValidateHeaderData(String[] worldData) throws InvalidInputException {
+    private void validateHeaderData(String[] worldData) throws InvalidInputException {
         if (worldData.length != 4) {
             throw new InvalidInputException("Could not read first line");
         }

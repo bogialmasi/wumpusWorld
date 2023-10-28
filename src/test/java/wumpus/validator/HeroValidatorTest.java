@@ -4,9 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.Mockito.*;
-import wumpus.exceptions.*;
-import wumpus.model.objects.*;
+import wumpus.exceptions.HeroException;
+import wumpus.exceptions.InvalidPositionException;
+import wumpus.model.objects.Hero;
+import wumpus.model.objects.World;
 import wumpus.service.validator.impl.HeroValidatorImpl;
 
 import java.awt.*;

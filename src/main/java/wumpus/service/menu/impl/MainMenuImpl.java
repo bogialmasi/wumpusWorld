@@ -3,13 +3,13 @@ package wumpus.service.menu.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
+import wumpus.model.objects.World;
 import wumpus.service.game.commands.impl.CommandsImpl;
 import wumpus.service.game.impl.GamePlayerImpl;
 import wumpus.service.map.impl.MapReaderImpl;
 import wumpus.service.menu.MainMenu;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
-import wumpus.model.objects.World;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,7 +71,7 @@ public class MainMenuImpl implements MainMenu {
             switch (chosenMenuOption) {
                 case 1 -> {
                     playGame(); // 1 - play
-                }
+                    }
                 case 2 -> {
                     uploadFromFile(); // 2 - load new file with MapReader
                 }

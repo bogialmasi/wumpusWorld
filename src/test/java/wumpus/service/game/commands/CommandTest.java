@@ -3,19 +3,11 @@ package wumpus.service.game.commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wumpus.model.objects.Direction;
-import wumpus.model.objects.Hero;
-import wumpus.model.objects.World;
-import wumpus.service.game.commands.Commands;
 import wumpus.service.game.commands.impl.CommandsImpl;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import wumpus.service.menu.MainMenu;
-
-import java.util.Scanner;
 
 @ExtendWith(MockitoExtension.class)
 public class CommandTest {

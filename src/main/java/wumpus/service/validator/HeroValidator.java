@@ -9,11 +9,5 @@ import java.awt.*;
 public interface HeroValidator {
     void validateHeroPositionIsInsideMap(World world, int row, int col) throws HeroException;
     void validateHeroStartingPosition(Point startingPoint, Point heroPosition) throws InvalidPositionException;
-  /*
-    boolean canHeroGoThere(String[][] goToSquare);
-    int numOfArrows();
-    boolean isHeroAlive();
-    boolean isHeroShootingWall();
-    boolean doesHeroHaveTheGold();*/
 
 }
