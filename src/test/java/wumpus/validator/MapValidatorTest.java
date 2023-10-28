@@ -291,25 +291,6 @@ public class MapValidatorTest {
     }
 
     @Test
-    void isThereAnythingOnThisPosition_TakenPosition(){
-        Point pos = new Point(5,5);
-        world = new World(10);
-        world.gameObjects.add(new Pit(new Point(pos)));
-        //when
-        InvalidPositionException exception = assertThrows(InvalidPositionException.class, ()-> mapValidatorImpl.isThereAnythingOnThisPosition(pos,world));
-        //then
-        assertEquals("Something already on this position: (5,5)", exception.getMessage());
-    }
-
-    @Test
-    void isThereAnythingOnThisPosition_EmptyPosition() throws InvalidPositionException {
-        Point pos = new Point(5,5);
-        world = new World(10);
-        world.gameObjects.add(new GameObject(new Point(pos), Constants.EMPTY));
-        mapValidatorImpl.isThereAnythingOnThisPosition(pos, world);
-    }
-
-    @Test
     void isThisPositionEmpty_Empty() throws InvalidInputException {
         Point pos = new Point(5,5);
         world = new World(10);

@@ -29,7 +29,7 @@ public class MainMenuImpl implements MainMenu {
     }
 
     public void startMenu() throws InvalidInputException {
-        LOGGER.info("*** WELCOME TO WUMPUS WORLD ! ***");
+        LOGGER.info("\n*** WELCOME TO WUMPUS WORLD ! ***");
         askForUsername();
     }
 
@@ -38,11 +38,11 @@ public class MainMenuImpl implements MainMenu {
         try {
             String inputUsername = null;
             while (inputUsername == null) {
-                LOGGER.info("Username: ");
+                LOGGER.info("\nUsername: ");
                 inputUsername = sc.next();
             }
             if (inputUsername.length() > 0) {
-                LOGGER.info("Hello, " + inputUsername + "!\n");
+                LOGGER.info("\nHello, " + inputUsername + "!\n");
                 chooseMenu();
             }
         } catch (Exception e) {
@@ -55,13 +55,13 @@ public class MainMenuImpl implements MainMenu {
 
     private void chooseMenu() throws InvalidInputException {
         LOGGER.info(
-                "1 - PLAY\n" +
+                "\n1 - PLAY\n" +
                         "2 - LOAD NEW FILE\n" +
                         "3 - LOAD SAVED FILE\n" +
                         "4 - SAVE\n" +
                         "5 - EXIT"
         );
-        LOGGER.info("Choose an option from above: ");
+        LOGGER.info("\nChoose an option from above: ");
 
         try {
             sc = new Scanner(System.in);
@@ -73,7 +73,7 @@ public class MainMenuImpl implements MainMenu {
                 case 4 -> saveGameToDB(); // 4 - save -- to be implemented later
                 case 5 -> exitGame(); // 5 - exit
                 default -> {
-                    LOGGER.info("Please choose a number between 1 and 5!");
+                    LOGGER.info("\nPlease choose a number between 1 and 5!");
                     chooseMenu();
                 }
             }
@@ -91,7 +91,7 @@ public class MainMenuImpl implements MainMenu {
         if (world == null) {
             LOGGER.warn("An error occured. Please try again!");
         } else {
-            LOGGER.info("Map loaded succesfully. Ready to play.");
+            LOGGER.info("\nMap loaded succesfully. Ready to play.");
         }
         chooseMenu();
     }
@@ -121,7 +121,7 @@ public class MainMenuImpl implements MainMenu {
 
     @Override
     public void exitGame() {
-        LOGGER.info("*** GOOD BYE ! ***");
+        LOGGER.info("\n*** GOOD BYE ! ***");
         System.exit(0);
     }
 }

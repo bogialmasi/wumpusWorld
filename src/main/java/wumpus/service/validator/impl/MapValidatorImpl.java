@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class MapValidatorImpl implements MapValidator {
-
-
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapValidatorImpl.class);
 
     public MapValidatorImpl() {
@@ -87,15 +85,6 @@ public class MapValidatorImpl implements MapValidator {
     }
 
     @Override
-    public void validateOnlyOneHeroExists(World world) throws InvalidObjectAmountException {
-        for (int i = 0; i < world.gameObjects.size(); i++) {
-            if (world.gameObjects.get(i).getType().equals(Constants.HERO)) {
-                throw new InvalidObjectAmountException("There is already a hero created.");
-            }
-        }
-    }
-
-    @Override
     public void validateOnlyOneGoldExists(World world) throws InvalidObjectAmountException {
         for (int i = 0; i < world.gameObjects.size(); i++) {
             if (world.gameObjects.get(i).getType().equals(Constants.GOLD)) {
@@ -104,18 +93,12 @@ public class MapValidatorImpl implements MapValidator {
         }
     }
 
-
     @Override
-    public void isThereAnythingOnThisPosition(Point pos, World world) throws InvalidPositionException {
-        for (int i = 0; i < world.gameObjects.size(); i++) {
-            int objectX = (int) world.gameObjects.get(i).getPos().getX();
-            int objectY = (int) world.gameObjects.get(i).getPos().getY();
-            if (objectX == pos.getX() && objectY == pos.getY()) {
-                if (!world.gameObjects.get(i).getType().equals(Constants.EMPTY)) {
-                    throw new InvalidPositionException("Something already on this position: (" + objectX + "," + objectY + ")");
-                }
-            }
+    public boolean validateHeroIsNotOnThisPosition(Point heroPos, Point actualPosition) throws InvalidPositionException {
+        if (heroPos.getX() != actualPosition.getX() || heroPos.getY() != actualPosition.getY()) {
+            return true;
         }
+        return false;
     }
 
     @Override

@@ -8,7 +8,6 @@ import wumpus.model.objects.*;
 import wumpus.service.map.MapReader;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
-import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -16,14 +15,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MapReaderImpl implements MapReader {
-    private int mapSize = 0; //N
     private static final Logger LOGGER = LoggerFactory.getLogger(MapReaderImpl.class);
-
     private final MapValidator mapValidator;
     private final BufferedReader reader;
     private final HeroValidator heroValidator;
     private World world = null;
-
 
     public MapReaderImpl(MapValidator mapValidator, BufferedReader reader, HeroValidator heroValidator) {
         this.mapValidator = mapValidator;
@@ -32,77 +28,89 @@ public class MapReaderImpl implements MapReader {
     }
 
     private Direction parseHeroDir(String heroDir) throws InvalidPositionException {
-        return switch (heroDir) {
-            case Constants.NORTH -> Direction.N;
-            case Constants.EAST -> Direction.E;
-            case Constants.WEST -> Direction.W;
-            case Constants.SOUTH -> Direction.S;
-            default -> throw new InvalidPositionException("Hero's direction is invalid");
-        };
+        switch (heroDir) {
+            case Constants.NORTH:
+                return Direction.N;
+            case Constants.EAST:
+                return Direction.E;
+            case Constants.WEST:
+                return Direction.W;
+            case Constants.SOUTH:
+                return Direction.S;
+            default:
+                throw new InvalidPositionException("Hero's direction is invalid");
+        }
     }
-
 
     public World readMap() throws InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, InvalidPositionException, InvalidInputException {
         int row = 0;
         Hero hero;
+        WorldData worldData;
         try {
             String line = reader.readLine();
-            String[] worldData = line.split(" ");
-            if(worldData.length != 4){
-                throw new InvalidInputException("Could not read first line");
-            }
-            mapSize = Integer.parseInt(worldData[0]);
-            int heroCol = (int) worldData[1].charAt(0) % Constants.ASCII_STARTINGPOINT;
-            int heroRow = Integer.parseInt(worldData[2])-1;
-            Direction heroDir = parseHeroDir(worldData[3]);
-            LOGGER.trace("Position of Hero : column={} row={} direction={}", heroCol, heroRow, heroDir);
-            world = new World(mapSize);
+            String[] header = line.split(" ");
+            ValidateHeaderData(header);
+            worldData = ParseHeaderData(header);
 
-            hero = new Hero(new Point(heroRow, heroCol), heroDir);
+            world = new World(worldData.getMapSize());
+
+            hero = new Hero(new Point(worldData.getHeroRow(), worldData.getHeroCol()), worldData.getHeroDirection());
+            world.gameObjects.add(hero);
+            world.map[worldData.getHeroRow()][worldData.getHeroCol()] = Constants.HERO;
+
             line = reader.readLine();
-
             while (line != null) {
                 String[] elements = line.split("");
-                mapValidator.validateColumnSize(mapSize, elements.length);
+                mapValidator.validateColumnSize(worldData.getMapSize(), elements.length);
                 for (int column = 0; column < elements.length; column++) {
+                    Point actualPosition = new Point(row, column);
                     switch (elements[column]) { // collects objects separated by class
                         case Constants.WALL -> {
-                            Wall wall = new Wall(new Point(row, column));
-                            //world.walls.add(wall);
-                            world.gameObjects.add(wall);
-                            world.map[row][column] = Constants.WALL;
+                            if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
+                                Wall wall = new Wall(actualPosition);
+                                world.gameObjects.add(wall);
+                                world.map[row][column] = Constants.WALL;
+                            } else {
+                                throw new InvalidInputException("In wall");
+                            }
                         }
                         case Constants.WUMPUS -> {
-                            Wumpus wumpus = new Wumpus(new Point(row, column));
-                            //world.wumpuses.add(wumpus);
-                            world.gameObjects.add(wumpus);
-                            world.map[row][column] = Constants.WUMPUS;
+                            if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
+                                Wumpus wumpus = new Wumpus(actualPosition);
+                                world.gameObjects.add(wumpus);
+                                world.map[row][column] = Constants.WUMPUS;
+                            } else {
+                                throw new InvalidInputException("In wumpus");
+                            }
                         }
                         case Constants.GOLD -> {
-                            mapValidator.validateOnlyOneGoldExists(world);
-                            Gold gold = new Gold(new Point(row, column));
-                            //world.gold = gold;
-                            world.gameObjects.add(new Gold(new Point(row, column)));
-                            world.map[row][column] = Constants.GOLD;
+                            if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
+                                mapValidator.validateOnlyOneGoldExists(world);
+                                Gold gold = new Gold(actualPosition);
+                                world.gameObjects.add(gold);
+                                world.map[row][column] = Constants.GOLD;
+                            } else {
+                                throw new InvalidInputException("In gold");
+                            }
                         }
                         case Constants.HERO -> {
-                            mapValidator.validateOnlyOneHeroExists(world);
-                            mapValidator.isThereAnythingOnThisPosition(new Point(row, column), world);
                             heroValidator.validateHeroPositionIsInsideMap(world, row, column);
-                            heroValidator.validateHeroStartingPosition(new Point(row, column), hero.getPos());
-                            world.gameObjects.add(hero);
-                            world.map[row][column] = Constants.HERO;
+                            heroValidator.validateHeroStartingPosition(actualPosition, hero.getPos());
                         }
                         case Constants.PIT -> {
-                            Pit pit = new Pit(new Point(row, column));
-                            //world.pits.add(pit);
-                            world.gameObjects.add(pit);
-                            world.map[row][column] = Constants.PIT;
+                            if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
+                                Pit pit = new Pit(actualPosition);
+                                world.gameObjects.add(pit);
+                                world.map[row][column] = Constants.PIT;
+                            }  else {
+                                throw new InvalidInputException("In pit");
+                            }
                         }
                         case Constants.EMPTY -> {
-                            //world.emptyFields.add(new Point(row, column));
-                            world.gameObjects.add(new GameObject(new Point(row, column), Constants.EMPTY));
-                            world.map[row][column] = Constants.EMPTY;
+                            if (mapValidator.validateHeroIsNotOnThisPosition(hero.getPos(), actualPosition)) {
+                                world.gameObjects.add(new GameObject(actualPosition, Constants.EMPTY));
+                                world.map[row][column] = Constants.EMPTY;
+                            } // else ág nincs, mert ez azt jelenti h a Herot rátettük a pályára. Így az empty nem írja felül a Herot az inputból. Mivel csak az empty-re tehető Hero, ezért ennél az egynél nem dobunk invalid exceptiont.
                         }
                         default -> {
                         }
@@ -114,22 +122,34 @@ public class MapReaderImpl implements MapReader {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        finally {
-            reader.close();
-        }
 
         world.showMap();
-        validateMap(row);
+        validateMap(row, worldData);
 
-        //hero loadout
         hero.setArrows(world.getWumpuses().size());
 
         return world;
     }
 
-    private void validateMap(int row) throws InvalidSizeException, InvalidObjectAmountException, InvalidPositionException {
-        mapValidator.validateRowSize(mapSize, row);
-        mapValidator.validateSizeOfMap(mapSize, world);
+    private WorldData ParseHeaderData(String[] header) throws InvalidPositionException {
+        int mapSize = Integer.parseInt(header[0]);
+        int heroCol = (int) header[1].charAt(0) % Constants.ASCII_STARTINGPOINT;
+        int heroRow = Integer.parseInt(header[2]) - 1;
+        Direction heroDir = parseHeroDir(header[3]);
+        LOGGER.trace("Position of Hero : column={} row={} direction={}", header[1].charAt(0), heroRow + 1, heroDir);
+
+        return new WorldData(mapSize, heroRow, heroCol, heroDir);
+    }
+
+    private void ValidateHeaderData(String[] worldData) throws InvalidInputException {
+        if (worldData.length != 4) {
+            throw new InvalidInputException("Could not read first line");
+        }
+    }
+
+    private void validateMap(int row, WorldData worldData) throws InvalidSizeException, InvalidObjectAmountException, InvalidPositionException, HeroException {
+        mapValidator.validateRowSize(worldData.getMapSize(), row);
+        mapValidator.validateSizeOfMap(worldData.getMapSize(), world);
         mapValidator.validateAmountOfWumpuses(world);
         mapValidator.validateWallsOnEdgesOfMap(world);
     }

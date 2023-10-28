@@ -89,7 +89,7 @@ public class MapReaderTest {
         assertEquals(world.getN(), 6);
         assertEquals(world.getWalls().size(), 20);
         assertEquals(world.getPits().size(), 3);
-        assertEquals(world.getEmptyFields().size(), 11);
+        assertEquals(world.getEmptyFields().size(), 10);
         assertEquals(world.getGold().getType(), Constants.GOLD);
         AssertMap(world.map);
         AssertGold(world.getGold());
