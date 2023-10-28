@@ -1,19 +1,23 @@
-package wumpus.validator;
+package wumpus.service.validator;
 
-import wumpus.Constants;
+import org.slf4j.LoggerFactory;
+import wumpus.constants.Constants;
 import wumpus.exceptions.InvalidInputException;
 import wumpus.exceptions.InvalidObjectAmountException;
 import wumpus.exceptions.InvalidPositionException;
 import wumpus.exceptions.InvalidSizeException;
-import wumpus.objects.GameObject;
-import wumpus.objects.Wall;
-import wumpus.world.World;
+import wumpus.model.objects.GameObject;
+import wumpus.model.objects.Wall;
+import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class MapValidatorImpl implements MapValidator {
+
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MapValidatorImpl.class);
 
     public MapValidatorImpl() {
     }
@@ -23,7 +27,7 @@ public class MapValidatorImpl implements MapValidator {
         if (world.getN() != mapSize || !(world.getN() >= 6 && world.getN() <= 20)) {
             throw new InvalidSizeException("The size of the map is invalid!");
         } else {
-            System.out.println("Size of map is OK.");
+            LOGGER.info("Size of map is OK.");
         }
     }
 
@@ -32,7 +36,7 @@ public class MapValidatorImpl implements MapValidator {
         if (mapSize != rowLength) {
             throw new InvalidSizeException("Row size is invalid!");
         } else {
-            System.out.println("Size of rows are OK.");
+            LOGGER.info("Size of rows are OK.");
         }
     }
 
@@ -118,7 +122,7 @@ public class MapValidatorImpl implements MapValidator {
         ArrayList<GameObject> emptyFields = world.getEmptyFields();
         Optional<GameObject> value = emptyFields
                 .stream()
-                .filter(a -> a.getType() == Constants.EMPTY)
+                .filter(a -> a.getType().equals(Constants.EMPTY))
                 .findFirst();
         if (value.isEmpty()) {
             throw new InvalidInputException("Hero cannot be placed on filled spot.");

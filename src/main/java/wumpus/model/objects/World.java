@@ -1,9 +1,7 @@
-package wumpus.world;
+package wumpus.model.objects;
 
-import wumpus.Constants;
-import wumpus.objects.*;
+import wumpus.constants.Constants;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class World {
@@ -59,10 +57,10 @@ public class World {
         return objects;
     }
 
-    public void ShowMap() {
+    public void showMap() {
         for (int i = 0; i < this.getN(); i++) {
             for (int j = 0; j < this.getN(); j++) {
-                System.out.print(map[i][j]);
+                System.out.print(this.map[i][j]);
             }
             System.out.print("\n");
         }

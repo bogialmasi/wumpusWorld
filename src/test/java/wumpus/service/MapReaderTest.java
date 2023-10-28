@@ -1,20 +1,19 @@
-package wumpus.service.mapreader;
+package wumpus.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import wumpus.Constants;
+import wumpus.constants.Constants;
 import wumpus.exceptions.*;
-import wumpus.objects.Direction;
-import wumpus.objects.GameObject;
-import wumpus.objects.Hero;
-import wumpus.service.MapReaderImpl;
-import wumpus.validator.HeroValidator;
-import wumpus.validator.HeroValidatorImpl;
-import wumpus.validator.MapValidatorImpl;
-import wumpus.world.World;
+import wumpus.model.objects.Direction;
+import wumpus.model.objects.GameObject;
+import wumpus.model.objects.Hero;
+import wumpus.service.validator.HeroValidator;
+import wumpus.service.validator.HeroValidatorImpl;
+import wumpus.service.validator.MapValidatorImpl;
+import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -90,6 +89,9 @@ public class MapReaderTest {
         assertEquals(world.getWalls().size(), 20);
         assertEquals(world.getPits().size(), 3);
         assertEquals(world.getEmptyFields().size(), 11);
+        assertEquals(world.getGold().getType(), Constants.GOLD);
+        AssertMap(world.map);
+        AssertGold(world.getGold());
     }
 
     @Test

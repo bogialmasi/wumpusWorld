@@ -1,9 +1,9 @@
-package wumpus.validator;
+package wumpus.service.validator;
 
 import wumpus.exceptions.HeroException;
 import wumpus.exceptions.InvalidPositionException;
-import wumpus.objects.Hero;
-import wumpus.world.World;
+import wumpus.model.objects.Hero;
+import wumpus.model.objects.World;
 
 import java.awt.*;
 

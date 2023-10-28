@@ -1,11 +1,13 @@
 package wumpus.service;
 
-import wumpus.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import wumpus.constants.Constants;
 import wumpus.exceptions.*;
-import wumpus.objects.*;
-import wumpus.validator.HeroValidator;
-import wumpus.validator.MapValidator;
-import wumpus.world.World;
+import wumpus.model.objects.*;
+import wumpus.service.validator.HeroValidator;
+import wumpus.service.validator.MapValidator;
+import wumpus.model.objects.World;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -14,11 +16,12 @@ import java.io.IOException;
 
 public class MapReaderImpl implements MapReader {
     private int mapSize = 0; //N
+    private static final Logger LOGGER = LoggerFactory.getLogger(MapReaderImpl.class);
 
-    MapValidator mapValidator;
-    BufferedReader reader;
-    HeroValidator heroValidator;
-    World world = null;
+    private final MapValidator mapValidator;
+    private final BufferedReader reader;
+    private final HeroValidator heroValidator;
+    private World world = null;
 
 
     public MapReaderImpl(MapValidator mapValidator, BufferedReader reader, HeroValidator heroValidator) {
@@ -28,21 +31,15 @@ public class MapReaderImpl implements MapReader {
     }
 
     private Direction parseHeroDir(String heroDir) throws InvalidPositionException {
-        if (heroDir.equals(Constants.NORTH)) {
-            return Direction.N;
-        } else if (heroDir.equals(Constants.EAST)) {
-            return Direction.E;
-        } else if (heroDir.equals(Constants.WEST)) {
-            return Direction.W;
-        } else if (heroDir.equals(Constants.SOUTH)) {
-            return Direction.S;
-        } else throw new InvalidPositionException("Hero's direction is invalid");
+        return switch (heroDir) {
+            case Constants.NORTH -> Direction.N;
+            case Constants.EAST -> Direction.E;
+            case Constants.WEST -> Direction.W;
+            case Constants.SOUTH -> Direction.S;
+            default -> throw new InvalidPositionException("Hero's direction is invalid");
+        };
     }
 
-
-    public int osszead(int x, int y) {
-        return x + y;
-    }
 
     public World readMap() throws InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, InvalidPositionException, InvalidInputException {
         int row = 0;
@@ -57,6 +54,7 @@ public class MapReaderImpl implements MapReader {
             int heroCol = (int) worldData[1].charAt(0) % Constants.ASCII_STARTINGPOINT;
             int heroRow = Integer.parseInt(worldData[2])-1;
             Direction heroDir = parseHeroDir(worldData[3]);
+            LOGGER.trace("Position of Hero : column={} row={} direction={}", heroCol, heroRow, heroDir);
             world = new World(mapSize);
 
             hero = new Hero(new Point(heroRow, heroCol), heroDir);
@@ -119,7 +117,7 @@ public class MapReaderImpl implements MapReader {
             reader.close();
         }
 
-        world.ShowMap();
+        world.showMap();
         validateMap(row);
 
         //hero loadout
@@ -128,7 +126,7 @@ public class MapReaderImpl implements MapReader {
         return world;
     }
 
-    public void validateMap(int row) throws InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+    private void validateMap(int row) throws InvalidSizeException, InvalidObjectAmountException, InvalidPositionException {
         mapValidator.validateRowSize(mapSize, row);
         mapValidator.validateSizeOfMap(mapSize, world);
         mapValidator.validateAmountOfWumpuses(world);

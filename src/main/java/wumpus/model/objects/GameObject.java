@@ -1,10 +1,10 @@
-package wumpus.objects;
+package wumpus.model.objects;
 
 import java.awt.*;
 
 public class GameObject {
-    Point pos;
-    String type;
+    private Point pos;
+    private String type;
 
     public GameObject(Point pos, String type) {
         this.pos = pos;

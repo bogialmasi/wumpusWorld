@@ -1,6 +1,6 @@
-package wumpus.objects;
+package wumpus.model.objects;
 
-import wumpus.Constants;
+import wumpus.constants.Constants;
 
 import java.awt.*;
 

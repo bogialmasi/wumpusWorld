@@ -1,7 +1,7 @@
 package wumpus.service;
 
 import wumpus.exceptions.*;
-import wumpus.world.World;
+import wumpus.model.objects.World;
 
 import java.io.IOException;
 

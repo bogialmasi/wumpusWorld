@@ -1,10 +1,8 @@
-package wumpus.validator;
+package wumpus.service.validator;
 import wumpus.exceptions.*;
-import wumpus.objects.GameObject;
-import wumpus.world.World;
+import wumpus.model.objects.World;
 
 import java.awt.*;
-import java.util.List;
 
 public interface MapValidator {
     void validateSizeOfMap(int mapSize, World world) throws InvalidSizeException;

@@ -1,10 +1,12 @@
-package wumpus.menu;
+package wumpus.service.menu;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
 import wumpus.service.MapReaderImpl;
-import wumpus.validator.HeroValidator;
-import wumpus.validator.MapValidator;
-import wumpus.world.World;
+import wumpus.service.validator.HeroValidator;
+import wumpus.service.validator.MapValidator;
+import wumpus.model.objects.World;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +15,11 @@ import java.util.Scanner;
 public class MainMenuImpl implements MainMenu {
     Scanner sc;
     World world;
-    private MapValidator mapValidator;
+    private final MapValidator mapValidator;
     BufferedReader bufferedReader;
     private HeroValidator heroValidator;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuImpl.class);
 
     public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator) {
 
@@ -24,20 +28,20 @@ public class MainMenuImpl implements MainMenu {
     }
 
     public void startMenu() throws InvalidInputException {
-        System.out.println("*** WELCOME TO WUMPUS WORLD ! ***");
+        LOGGER.info("*** WELCOME TO WUMPUS WORLD ! ***");
         askForUsername();
     }
 
-    public void askForUsername() throws InvalidInputException {
+    private void askForUsername() throws InvalidInputException {
         sc = new Scanner(System.in);
         try {
             String inputUsername = null;
             while (inputUsername == null) {
-                System.out.print("Username: ");
+                LOGGER.info("Username: ");
                 inputUsername = sc.next();
             }
             if (inputUsername.length() > 0) {
-                System.out.println("Hello, " + inputUsername + "!\n");
+                LOGGER.info("Hello, " + inputUsername + "!\n");
                 chooseMenu();
             }
         } catch (Exception e) {
@@ -48,15 +52,15 @@ public class MainMenuImpl implements MainMenu {
 
     }
 
-    public void chooseMenu() throws InvalidInputException {
-        System.out.println(
+    private void chooseMenu() throws InvalidInputException {
+        LOGGER.info(
                 "1 - PLAY\n" +
                         "2 - LOAD NEW FILE\n" +
                         "3 - LOAD SAVED FILE\n" +
                         "4 - SAVE\n" +
                         "5 - EXIT"
         );
-        System.out.println("Choose an option from above: ");
+        LOGGER.info("Choose an option from above: ");
 
         try {
             sc = new Scanner(System.in);
@@ -68,7 +72,7 @@ public class MainMenuImpl implements MainMenu {
                 case 4 -> saveGameToDB(); // 4 - save -- to be implemented later
                 case 5 -> exitGame(); // 5 - exit
                 default -> {
-                    System.out.println("Please choose a number between 1 and 5!");
+                    LOGGER.info("Please choose a number between 1 and 5!");
                     chooseMenu();
                 }
             }
@@ -80,15 +84,14 @@ public class MainMenuImpl implements MainMenu {
     }
 
     @Override
-    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, HeroException, InvalidPositionException {
+    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, bufferedReader, heroValidator);
         world = mapReaderImpl.readMap();
         if (world == null) {
-            System.out.println("An error occured. Please try again!");
+            LOGGER.warn("An error occured. Please try again!");
         } else {
-            System.out.println("Map loaded succesfully. Ready to play.");
+            LOGGER.info("Map loaded succesfully. Ready to play.");
         }
-
         chooseMenu();
     }
 
@@ -97,27 +100,27 @@ public class MainMenuImpl implements MainMenu {
         if (world != null) {
             //TODO IMPLEMENT GAME STARTER
         } else {
-            System.out.println("Load a map first to play!");
+            LOGGER.info("Load a map first to play!");
             chooseMenu();
         }
     }
 
     @Override
     public void saveGameToDB() throws InvalidInputException {
-        System.out.println("This Function does not work yet.");
+        LOGGER.warn("This Function does not work yet.");
         chooseMenu();
     }
 
     @Override
     public void loadGameFromDB() throws InvalidInputException {
-        System.out.println("This Function does not work yet.");
+        LOGGER.warn("This Function does not work yet.");
         chooseMenu();
     }
 
 
     @Override
     public void exitGame() {
-        System.out.println("*** GOOD BYE ! ***");
+        LOGGER.info("*** GOOD BYE ! ***");
         System.exit(0);
     }
 }

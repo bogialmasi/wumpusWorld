@@ -1,6 +1,4 @@
-package wumpus;
-
-import wumpus.exceptions.HeroException;
+package wumpus.constants;
 
 public class Constants {
     public static final String GOLD = "G";

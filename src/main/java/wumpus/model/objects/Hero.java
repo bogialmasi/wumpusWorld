@@ -1,6 +1,6 @@
-package wumpus.objects;
+package wumpus.model.objects;
 
-import wumpus.Constants;
+import wumpus.constants.Constants;
 
 import java.awt.*;
 
@@ -8,8 +8,25 @@ import java.awt.*;
 public class Hero extends GameObject {
     private int arrows;
     private boolean hasGold;
-    Direction dir;
-    Point startingPosition;
+    private Direction dir;
+
+    public boolean isHasGold() {
+        return hasGold;
+    }
+
+    public void setDir(Direction dir) {
+        this.dir = dir;
+    }
+
+    public Point getStartingPosition() {
+        return startingPosition;
+    }
+
+    public void setStartingPosition(Point startingPosition) {
+        this.startingPosition = startingPosition;
+    }
+
+    private Point startingPosition;
 
     public Hero(Point pos) {
         super(pos, Constants.HERO);
@@ -32,10 +49,6 @@ public class Hero extends GameObject {
         return hasGold;
     }
 
-    public void setHasGold(boolean hasGold) {
-        this.hasGold = hasGold;
-    }
-
     public int getArrows() {
         return arrows;
     }
@@ -48,13 +61,4 @@ public class Hero extends GameObject {
         return dir;
     }
 
-    /*
-    public String heroOnMap() {
-        return "H";
-    }
-
-    public boolean equals(String c) {
-        if (heroOnMap().equals(c)) return true;
-        return false;
-    }*/
 }
