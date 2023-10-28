@@ -13,7 +13,7 @@ import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Pit;
 import wumpus.model.objects.Wall;
 import wumpus.model.objects.Wumpus;
-import wumpus.service.validator.MapValidatorImpl;
+import wumpus.service.validator.impl.MapValidatorImpl;
 import wumpus.model.objects.World;
 
 import java.awt.*;
@@ -23,8 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-
-
 public class MapValidatorTest {
     MapValidatorImpl mapValidatorImpl;
     World world;

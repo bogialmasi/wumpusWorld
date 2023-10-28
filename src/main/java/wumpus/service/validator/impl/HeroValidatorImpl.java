@@ -1,17 +1,20 @@
-package wumpus.service.validator;
+package wumpus.service.validator.impl;
 
 import wumpus.exceptions.HeroException;
 import wumpus.exceptions.InvalidPositionException;
 import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
+import wumpus.service.validator.HeroValidator;
 
 import java.awt.*;
 
 public class HeroValidatorImpl implements HeroValidator {
+
     @Override
-    public void validateHeroPosition(Hero hero, World world, int row, int col) throws HeroException {
+    public void validateHeroPositionIsInsideMap(World world, int row, int col) throws HeroException {
         if (row >= world.getN()-1 || row <= 0) {
             throw new HeroException("The Hero is standing in an invalid row");
+
         }
         if (col >= world.getN()-1 || col <= 0) {
             throw new HeroException("The Hero is standing in an invalid column");
@@ -24,6 +27,10 @@ public class HeroValidatorImpl implements HeroValidator {
             throw new InvalidPositionException("Hero is not on the given starting position on the map.");
         }
     }
+
+    /*
+
+    TODO use these methods to validate hero once hero is in gameplay
 
     @Override
     public boolean canHeroGoThere(String[][] goToSquare) {
@@ -48,5 +55,5 @@ public class HeroValidatorImpl implements HeroValidator {
     @Override
     public boolean doesHeroHaveTheGold() {
         return false;
-    }
+    }*/
 }

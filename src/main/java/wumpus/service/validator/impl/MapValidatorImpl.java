@@ -1,4 +1,4 @@
-package wumpus.service.validator;
+package wumpus.service.validator.impl;
 
 import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
@@ -9,6 +9,7 @@ import wumpus.exceptions.InvalidSizeException;
 import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Wall;
 import wumpus.model.objects.World;
+import wumpus.service.validator.MapValidator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class MapValidatorImpl implements MapValidator {
     }
 
     @Override
-    public void validateHero(World world) throws InvalidObjectAmountException {
+    public void validateOnlyOneHeroExists(World world) throws InvalidObjectAmountException {
         for (int i = 0; i < world.gameObjects.size(); i++) {
             if (world.gameObjects.get(i).getType().equals(Constants.HERO)) {
                 throw new InvalidObjectAmountException("There is already a hero created.");
@@ -95,7 +96,7 @@ public class MapValidatorImpl implements MapValidator {
     }
 
     @Override
-    public void validateGold(World world) throws InvalidObjectAmountException {
+    public void validateOnlyOneGoldExists(World world) throws InvalidObjectAmountException {
         for (int i = 0; i < world.gameObjects.size(); i++) {
             if (world.gameObjects.get(i).getType().equals(Constants.GOLD)) {
                 throw new InvalidObjectAmountException("There is already a gold on map.");

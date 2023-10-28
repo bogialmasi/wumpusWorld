@@ -11,8 +11,8 @@ public interface MapValidator {
 
     int validateAmountOfWumpuses(World world) throws InvalidObjectAmountException;
     void validateWallsOnEdgesOfMap(World world) throws InvalidPositionException;
-    void validateHero(World world) throws InvalidObjectAmountException, HeroException;
-    void validateGold(World world) throws InvalidObjectAmountException;
+    void validateOnlyOneHeroExists(World world) throws InvalidObjectAmountException, HeroException;
+    void validateOnlyOneGoldExists(World world) throws InvalidObjectAmountException;
     void isThereAnythingOnThisPosition(Point pos, World world) throws InvalidPositionException;
     void isThisPositionEmpty(Point pos, World world) throws InvalidInputException;
 }

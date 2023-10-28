@@ -1,9 +1,9 @@
 package wumpus;
 
 import wumpus.exceptions.InvalidInputException;
-import wumpus.service.menu.MainMenuImpl;
+import wumpus.service.menu.impl.MainMenuImpl;
 import wumpus.service.validator.MapValidator;
-import wumpus.service.validator.MapValidatorImpl;
+import wumpus.service.validator.impl.MapValidatorImpl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

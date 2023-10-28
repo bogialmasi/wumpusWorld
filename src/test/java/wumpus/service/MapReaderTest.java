@@ -10,9 +10,10 @@ import wumpus.exceptions.*;
 import wumpus.model.objects.Direction;
 import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Hero;
+import wumpus.service.map.impl.MapReaderImpl;
 import wumpus.service.validator.HeroValidator;
-import wumpus.service.validator.HeroValidatorImpl;
-import wumpus.service.validator.MapValidatorImpl;
+import wumpus.service.validator.impl.HeroValidatorImpl;
+import wumpus.service.validator.impl.MapValidatorImpl;
 import wumpus.model.objects.World;
 
 import java.awt.*;

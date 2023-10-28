@@ -1,10 +1,11 @@
-package wumpus.service;
+package wumpus.service.map.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
 import wumpus.exceptions.*;
 import wumpus.model.objects.*;
+import wumpus.service.map.MapReader;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
 import wumpus.model.objects.World;
@@ -78,16 +79,16 @@ public class MapReaderImpl implements MapReader {
                             world.map[row][column] = Constants.WUMPUS;
                         }
                         case Constants.GOLD -> {
-                            mapValidator.validateGold(world);
+                            mapValidator.validateOnlyOneGoldExists(world);
                             Gold gold = new Gold(new Point(row, column));
                             //world.gold = gold;
                             world.gameObjects.add(new Gold(new Point(row, column)));
                             world.map[row][column] = Constants.GOLD;
                         }
                         case Constants.HERO -> {
-                            mapValidator.validateHero(world);
+                            mapValidator.validateOnlyOneHeroExists(world);
                             mapValidator.isThereAnythingOnThisPosition(new Point(row, column), world);
-                            heroValidator.validateHeroPosition(hero, world, row, column);
+                            heroValidator.validateHeroPositionIsInsideMap(world, row, column);
                             heroValidator.validateHeroStartingPosition(new Point(row, column), hero.getPos());
                             world.gameObjects.add(hero);
                             world.map[row][column] = Constants.HERO;

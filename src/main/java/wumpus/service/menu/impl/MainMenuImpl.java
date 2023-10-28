@@ -1,9 +1,10 @@
-package wumpus.service.menu;
+package wumpus.service.menu.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
-import wumpus.service.MapReaderImpl;
+import wumpus.service.map.impl.MapReaderImpl;
+import wumpus.service.menu.MainMenu;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
 import wumpus.model.objects.World;

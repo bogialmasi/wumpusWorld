@@ -1,4 +1,4 @@
-package wumpus.service;
+package wumpus.service.map;
 
 import wumpus.exceptions.*;
 import wumpus.model.objects.World;
