@@ -105,7 +105,7 @@ public class MainMenuImpl implements MainMenu {
     @Override
     public void playGame() throws InvalidInputException {
         if (world != null) {
-            GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl());
+            GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl(), new Scanner(System.in));
             gameStarter.startGame();
         } else {
             LOGGER.info("Load a map first to play!");

@@ -61,4 +61,6 @@ public class Hero extends GameObject {
         return dir;
     }
 
+
+
 }

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class World {
     private int N;
     public String[][] map;
+    private Hero hero;
+    private Gold gold;
     public ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     public ArrayList<GameObject> getGameObjects() {

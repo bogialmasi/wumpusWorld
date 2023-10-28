@@ -6,7 +6,6 @@ import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
 import wumpus.service.game.GamePlayer;
 import wumpus.service.game.commands.Commands;
-import wumpus.service.game.commands.impl.CommandsImpl;
 import wumpus.service.menu.MainMenu;
 
 import java.util.Scanner;
@@ -19,25 +18,23 @@ public class GamePlayerImpl implements GamePlayer {
     private static final Logger LOGGER = LoggerFactory.getLogger(GamePlayerImpl.class);
     private Commands commands;
 
-    public GamePlayerImpl(World world, MainMenu mainMenu, Commands commands) {
+    public GamePlayerImpl(World world, MainMenu mainMenu, Commands commands, Scanner sc) {
         this.world = world;
         this.mainMenu = mainMenu;
         this.commands = commands;
+        this.sc = sc;
     }
 
     @Override
     public void startGame() {
         world.showMap();
+        Hero hero = ((Hero) (world.getHero()));
+        LOGGER.info("Current Hero Direction = {}", ((Hero) (world.getHero())).getDir());
         sc = new Scanner(System.in);
+        showCommands();
         String command = sc.next();
         while (!command.equals("z")) {
-            //kiirja a commandokat
-            System.out.println("\nw - up , s - down , a - left, d - right" +
-                    "\n x - shoot , g - pick up gold" +
-                    "\n l - turn left , r - turn right");
-            command = sc.next();
-
-            switch (command){
+            switch (command) {
                 case "w":
                     //goUp();
                     break;
@@ -57,17 +54,25 @@ public class GamePlayerImpl implements GamePlayer {
                     //pickUpGold();
                     break;
                 case "l":
-                    commands.turnLeft(((Hero)world.getHero()).getDir());
+                    hero.setDir(commands.turnLeft(hero.getDir()));
                     break;
                 case "r":
-                    commands.turnRight(((Hero)world.getHero()).getDir());
+                    hero.setDir(commands.turnRight(hero.getDir()));
                     break;
             }
+            LOGGER.info("Current Hero Direction = {}", hero.getDir());
+            world.showMap();
+            showCommands();
+            command = sc.next();
         }
+    }
 
-
-        //command inputot vár (scan string)
-        //inputra method call
+    private void showCommands() {
+        System.out.println("\nw - up , s - down , a - left, d - right" +
+                "\nx - shoot , g - pick up gold" +
+                "\nl - turn left , r - turn right" +
+                "\nz - quit level" +
+                "\npick a command!:");
     }
 
     public void BackToMainMenu() {
