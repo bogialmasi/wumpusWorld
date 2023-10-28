@@ -3,6 +3,8 @@ package wumpus.service.menu.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
+import wumpus.service.game.commands.impl.CommandsImpl;
+import wumpus.service.game.impl.GamePlayerImpl;
 import wumpus.service.map.impl.MapReaderImpl;
 import wumpus.service.menu.MainMenu;
 import wumpus.service.validator.HeroValidator;
@@ -22,18 +24,18 @@ public class MainMenuImpl implements MainMenu {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuImpl.class);
 
-    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator) {
-
+    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator, HeroValidator heroValidator) {
         this.bufferedReader = bufferedReader;
         this.mapValidator = mapValidator;
+        this.heroValidator = heroValidator;
     }
 
-    public void startMenu() throws InvalidInputException {
+    public void startMenu() {
         LOGGER.info("\n*** WELCOME TO WUMPUS WORLD ! ***");
         askForUsername();
     }
 
-    private void askForUsername() throws InvalidInputException {
+    private void askForUsername() {
         sc = new Scanner(System.in);
         try {
             String inputUsername = null;
@@ -53,7 +55,7 @@ public class MainMenuImpl implements MainMenu {
 
     }
 
-    private void chooseMenu() throws InvalidInputException {
+    public void chooseMenu() {
         LOGGER.info(
                 "\n1 - PLAY\n" +
                         "2 - LOAD NEW FILE\n" +
@@ -67,8 +69,12 @@ public class MainMenuImpl implements MainMenu {
             sc = new Scanner(System.in);
             int chosenMenuOption = sc.nextInt();
             switch (chosenMenuOption) {
-                case 1 -> playGame(); // 1 - play
-                case 2 -> uploadFromFile(); // 2 - load new file with MapReader
+                case 1 -> {
+                    playGame(); // 1 - play
+                }
+                case 2 -> {
+                    uploadFromFile(); // 2 - load new file with MapReader
+                }
                 case 3 -> loadGameFromDB(); // 3 - load saved file -- to be implemented later
                 case 4 -> saveGameToDB(); // 4 - save -- to be implemented later
                 case 5 -> exitGame(); // 5 - exit
@@ -99,7 +105,8 @@ public class MainMenuImpl implements MainMenu {
     @Override
     public void playGame() throws InvalidInputException {
         if (world != null) {
-            //TODO IMPLEMENT GAME STARTER
+            GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl());
+            gameStarter.startGame();
         } else {
             LOGGER.info("Load a map first to play!");
             chooseMenu();

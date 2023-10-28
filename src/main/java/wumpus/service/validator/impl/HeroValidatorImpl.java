@@ -22,8 +22,8 @@ public class HeroValidatorImpl implements HeroValidator {
     }
 
     @Override
-    public void validateHeroStartingPosition(Point startingPoint, Point heroPosition) throws InvalidPositionException {
-        if (!startingPoint.equals(heroPosition)) {
+    public void validateHeroStartingPosition(Point startingPoint, Point objectPosition) throws InvalidPositionException {
+        if (!objectPosition.equals(startingPoint)) {
             throw new InvalidPositionException("Hero is not on the given starting position on the map.");
         }
     }
