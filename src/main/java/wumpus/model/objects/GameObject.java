@@ -19,4 +19,7 @@ public class GameObject {
         return pos;
     }
 
+    public void setPos(Point pos) {
+        this.pos = pos;
+    }
 }

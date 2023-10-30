@@ -102,7 +102,7 @@ public class MapValidatorImpl implements MapValidator {
     }
 
     @Override
-    public void isThisPositionEmpty(Point pos, World world) throws InvalidInputException {
+    public boolean isThisPositionEmpty(Point pos, World world) throws InvalidInputException {
         ArrayList<GameObject> emptyFields = world.getEmptyFields();
         Optional<GameObject> value = emptyFields
                 .stream()
@@ -111,6 +111,7 @@ public class MapValidatorImpl implements MapValidator {
         if (value.isEmpty()) {
             throw new InvalidInputException("Hero cannot be placed on filled spot.");
         }
+        return true;
     }
 }
 

@@ -1,6 +1,7 @@
 package wumpus.service.validator;
 
 import wumpus.exceptions.HeroException;
+import wumpus.exceptions.InvalidInputException;
 import wumpus.exceptions.InvalidPositionException;
 import wumpus.model.objects.World;
 

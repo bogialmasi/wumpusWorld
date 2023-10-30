@@ -1,12 +1,17 @@
 package wumpus.service.game.commands;
 
+import wumpus.exceptions.InvalidInputException;
 import wumpus.model.objects.Direction;
+import wumpus.model.objects.Hero;
+import wumpus.model.objects.World;
+
+import java.awt.*;
 
 public interface Commands {
-    //goUp();
-    //goDown();
-    //goLeft();
-    //goRight();
+    void goUp(Hero hero, World world) throws InvalidInputException;
+    void goDown(Hero hero, World world);
+    void goLeft(Hero hero, World world);
+    void goRight(Hero hero, World world);
     //shoot();
     //pickUpGold();
     public Direction turnLeft(Direction direction);

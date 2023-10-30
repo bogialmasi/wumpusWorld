@@ -12,6 +12,6 @@ public interface MapValidator {
     void validateWallsOnEdgesOfMap(World world) throws InvalidPositionException;
     void validateOnlyOneGoldExists(World world) throws InvalidObjectAmountException;
     boolean validateHeroIsNotOnThisPosition(Point heroPos, Point actualPosition) throws InvalidPositionException;
-    void isThisPositionEmpty(Point pos, World world) throws InvalidInputException;
+    boolean isThisPositionEmpty(Point pos, World world) throws InvalidInputException;
 }
 

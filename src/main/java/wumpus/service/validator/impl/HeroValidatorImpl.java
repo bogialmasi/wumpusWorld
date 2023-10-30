@@ -1,13 +1,17 @@
 package wumpus.service.validator.impl;
 
 import wumpus.exceptions.HeroException;
+import wumpus.exceptions.InvalidInputException;
 import wumpus.exceptions.InvalidPositionException;
 import wumpus.model.objects.World;
 import wumpus.service.validator.HeroValidator;
+import wumpus.service.validator.MapValidator;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 public class HeroValidatorImpl implements HeroValidator {
+
 
     @Override
     public void validateHeroPositionIsInsideMap(World world, int row, int col) throws HeroException {
