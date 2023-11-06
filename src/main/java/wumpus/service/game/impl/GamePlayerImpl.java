@@ -30,42 +30,43 @@ public class GamePlayerImpl implements GamePlayer {
     public void startGame() throws InvalidInputException {
         world.showMap();
         Hero hero = ((Hero) (world.getHero()));
-        int heroY = ((int)(world.getHero().getPos().getY()));
-        int heroX = ((int)(world.getHero().getPos().getX()));
+        int heroY = ((int) (world.getHero().getPos().getY()));
+        int heroX = ((int) (world.getHero().getPos().getX()));
         LOGGER.info("Current Hero Direction = {}", ((Hero) (world.getHero())).getDir());
         sc = new Scanner(System.in);
         showCommands();
         String command = sc.next();
         while (!command.equals("z")) {
-            switch (command) {
-                case "w":
-                    commands.goUp(hero, world);
-                    break;
-                case "s":
-                    commands.goDown(hero, world);
-                    break;
-                case "a":
-                    commands.goLeft(hero, world);
-                    break;
-                case "d":
-                    commands.goRight(hero, world);
-                    break;
-                case "x":
-                    //shoot();
-                    break;
-                case "g":
-                    //pickUpGold();
-                    break;
-                case "l":
-                    hero.setDir(commands.turnLeft(hero.getDir()));
-                    break;
-                case "r":
-                    hero.setDir(commands.turnRight(hero.getDir()));
-                    break;
-                default:
-                    System.out.println("\n*** GAME QUIT ***");
-                    LOGGER.info("Invalid input in gameplay menu");
-                    backToMainMenu();
+            if (world.getHero().getPos() != null) {
+                switch (command) {
+                    case "w":
+                        commands.goUp(hero, world);
+                        break;
+                    case "s":
+                        commands.goDown(hero, world);
+                        break;
+                    case "a":
+                        commands.goLeft(hero, world);
+                        break;
+                    case "d":
+                        commands.goRight(hero, world);
+                        break;
+                    case "x":
+                        commands.shoot(hero, world);
+                        break;
+                    case "g":
+                        commands.pickUpGold(hero, world);
+                        break;
+                    case "l":
+                        hero.setDir(commands.turnLeft(hero.getDir()));
+                        break;
+                    case "r":
+                        hero.setDir(commands.turnRight(hero.getDir()));
+                        break;
+                    default:
+                        LOGGER.info("Invalid input in gameplay menu");
+                        ;
+                }
             }
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
             world.showMap();

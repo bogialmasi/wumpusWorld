@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wumpus.model.objects.Direction;
+import wumpus.model.objects.Hero;
 import wumpus.service.game.commands.impl.CommandsImpl;
+
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

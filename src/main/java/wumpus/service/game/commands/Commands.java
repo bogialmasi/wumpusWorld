@@ -2,6 +2,7 @@ package wumpus.service.game.commands;
 
 import wumpus.exceptions.InvalidInputException;
 import wumpus.model.objects.Direction;
+import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
 
@@ -12,8 +13,11 @@ public interface Commands {
     void goDown(Hero hero, World world);
     void goLeft(Hero hero, World world);
     void goRight(Hero hero, World world);
-    //shoot();
-    //pickUpGold();
-    public Direction turnLeft(Direction direction);
-    public Direction turnRight(Direction direction);
+    void shoot(Hero hero, World world);
+    void pickUpGold(Hero hero, World world);
+    Direction turnLeft(Direction direction);
+    Direction turnRight(Direction direction);
+    void handleHeroMove(String command, World world);
+    void gameOver(World world);
+
 }

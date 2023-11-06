@@ -46,6 +46,10 @@ public class Hero extends GameObject {
         return hasGold;
     }
 
+    public void setHasGold(boolean hasGold) {
+        this.hasGold = hasGold;
+    }
+
     public int getArrows() {
         return arrows;
     }
