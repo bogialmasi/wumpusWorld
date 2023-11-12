@@ -73,6 +73,7 @@ public class GamePlayerImpl implements GamePlayer {
             }
 
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
+            LOGGER.info("Number of arrows = {}", hero.getArrows());
             world.showMap();
             showCommands();
             command = sc.next();

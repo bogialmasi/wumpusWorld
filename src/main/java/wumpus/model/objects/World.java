@@ -1,9 +1,6 @@
 package wumpus.model.objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
-import wumpus.service.game.commands.impl.CommandsImpl;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ public class World {
     public String[][] map;
     private boolean gameOver = false;
     private boolean gameWon = false;
+
     public boolean isGameWon(Point heroProvisionalPoint) {
         Hero hero = (Hero) this.getHero();
         return gameWon = heroProvisionalPoint.equals(hero.getStartingPosition()) && hero.hasGold();
@@ -57,8 +55,19 @@ public class World {
     }
 
     public void removeGold() {
-        Gold g = (Gold)this.getGold();
+        Gold g = (Gold) this.getGold();
         this.gameObjects.remove(g);
+    }
+
+
+    public void killWumpus(int arrowPosX, int arrowPosY) {
+        for (GameObject wumpus : this.getWumpuses()) {
+            if (wumpus.getPos().equals(new Point(arrowPosX, arrowPosY))) {
+                this.gameObjects.remove(wumpus);
+                this.map[wumpus.getPos().x][wumpus.getPos().y] = Constants.EMPTY;
+                this.gameObjects.add(new GameObject(new Point(wumpus.getPos().x, wumpus.getPos().y), Constants.EMPTY));
+            }
+        }
     }
 
     public GameObject getHero() {

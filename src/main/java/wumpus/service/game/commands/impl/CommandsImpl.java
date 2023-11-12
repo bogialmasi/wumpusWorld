@@ -25,7 +25,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go up");
             case Constants.PIT -> {
                 handleHeroMove("w", world);
-                heroStepOnPitLoseArrow(world, hero);
+                heroLoseArrow(world, hero);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -56,7 +56,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go down");
             case Constants.PIT -> {
                 handleHeroMove("s", world);
-                heroStepOnPitLoseArrow(world, hero);
+                heroLoseArrow(world, hero);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -87,7 +87,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go right");
             case Constants.PIT -> {
                 handleHeroMove("d", world);
-                heroStepOnPitLoseArrow(world, hero);
+                heroLoseArrow(world, hero);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -119,7 +119,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go left");
             case Constants.PIT -> {
                 handleHeroMove("a", world);
-                heroStepOnPitLoseArrow(world, hero);
+                heroLoseArrow(world, hero);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -141,12 +141,60 @@ public class CommandsImpl implements Commands {
 
     @Override
     public void shoot(Hero hero, World world) {
-        /// todo implement
+        int arrowPosX = (int) hero.getPos().getX();
+        int arrowPosY = (int) hero.getPos().getY();
+        heroLoseArrow(world, hero);
+        switch (hero.getDir()) {
+            case N:
+                LOGGER.info("Hero shoots north.");
+                // hero is looking upwards, check if wall is in the way, wumpus dies if in the way and not covered by wall
+                while (arrowPosX > 0) {
+                    handleArrowShoot(world, arrowPosX, arrowPosY);
+                    arrowPosX--;
+                }
+                break;
+            case E:
+                LOGGER.info("Hero shoots east.");
+                // hero is looking right
+                while (arrowPosY < world.getN()) {
+                    handleArrowShoot(world, arrowPosX, arrowPosY);
+                    arrowPosY++;
+                }
+                break;
+            case W:
+                LOGGER.info("Hero shoots west.");
+                // hero is looking left
+                while (arrowPosY < 0) {
+                    handleArrowShoot(world, arrowPosX, arrowPosY);
+                    arrowPosY--;
+                }
+                break;
+            case S:
+                LOGGER.info("Hero shoots south.");
+                // hero is looking down
+                while (arrowPosX < world.getN()) {
+                    handleArrowShoot(world, arrowPosX, arrowPosY);
+                    arrowPosX++;
+                }
+                break;
+        }
     }
+
+    private void handleArrowShoot(World world, int arrowPosX, int arrowPosY) {
+        switch (world.map[arrowPosX][arrowPosY]) {
+            case Constants.WALL -> {
+                LOGGER.info("Arrow shot into wall");
+            }
+            case Constants.WUMPUS -> {
+                LOGGER.info("Arrow shot wumpus. Wumpus dies");
+                world.killWumpus(arrowPosX, arrowPosY);
+            }
+        }
+    }
+
 
     @Override
     public void pickUpGold(Hero hero, World world) {
-        // TODO solve: hero jumps two places after moving off, "H" stays on gold's previous pos after going there again
         if (hero.getPos().equals(world.getGold().getPos())) {
             hero.setHasGold(true);
             int goldX = world.getGold().getPos().x;
@@ -229,10 +277,10 @@ public class CommandsImpl implements Commands {
         return false;
     }
 
-    void heroStepOnPitLoseArrow(World world, Hero hero) {
+    void heroLoseArrow(World world, Hero hero) {
         if (hero.getArrows() > 0) {
             hero.setArrows(hero.getArrows() - 1);
-            LOGGER.info("Hero stepped on a pit and lost an arrow. Current number of arrows: {}", hero.getArrows());
+            LOGGER.info("Hero lost an arrow. Current number of arrows = {}", hero.getArrows());
         } else {
             LOGGER.info("Hero has no more arrows!");
         }
