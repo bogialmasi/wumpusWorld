@@ -3,10 +3,7 @@ package wumpus.service.game.commands.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
-import wumpus.model.objects.Direction;
-import wumpus.model.objects.GameObject;
-import wumpus.model.objects.Hero;
-import wumpus.model.objects.World;
+import wumpus.model.objects.*;
 import wumpus.service.game.commands.Commands;
 
 import java.awt.*;
@@ -16,36 +13,34 @@ public class CommandsImpl implements Commands {
 
     /*
         // TODO tests for goUp, goDown, goLeft, goRight!
-            GameOver method in GamePlayer!
-            Hero stays in GOLD after leaving the position
-            Hero does not move off gold after stepping on it
             */
     @Override
     public void goUp(Hero hero, World world) {
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
-        switch (world.map[heroX - 1][heroY]) {
+        int provisionalX = heroX - 1;
+        int provisionalY = heroY;
+        Point provisionalPoint = new Point(provisionalX, provisionalY);
+        switch (world.map[provisionalX][provisionalY]) {
             case Constants.WALL -> LOGGER.info("Hero cannot go up");
             case Constants.PIT -> {
                 handleHeroMove("w", world);
                 heroStepOnPitLoseArrow(world, hero);
-//                hero.setArrows(hero.getArrows() - 1);
-//                LOGGER.info("Hero stepped on a pit and lost an arrow. Current number of arrows: {}", hero.getArrows());
-                hero.setPos(new Point(heroX - 1, heroY));
+                hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
-                handleHeroMove("w", world);
-                gameOver(world);
                 LOGGER.info("Hero stepped on Wumpus and died. Game Over");
-                hero.setPos(new Point(heroX - 1, heroY));
+                world.setGameOver(true);
             }
             case Constants.GOLD -> {
+                LOGGER.info("Hero is standing on gold. Press \"g\" to pick it up!");
                 handleHeroMove("w", world);
-                LOGGER.info("Hero is standing on gold. Pres \"g\" to pick it up!");
+                hero.setPos(provisionalPoint);
             }
             default -> {  // empty
+                world.isGameWon(new Point(provisionalX, provisionalY));
                 handleHeroMove("w", world);
-                hero.setPos(new Point(heroX - 1, heroY));
+                hero.setPos(provisionalPoint);
             }
         }
     }
@@ -54,28 +49,29 @@ public class CommandsImpl implements Commands {
     public void goDown(Hero hero, World world) {
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
-        switch (world.map[heroX + 1][heroY]) {
+        int provisionalX = heroX + 1;
+        int provisionalY = heroY;
+        Point provisionalPoint = new Point(provisionalX, provisionalY);
+        switch (world.map[provisionalX][provisionalY]) {
             case Constants.WALL -> LOGGER.info("Hero cannot go down");
             case Constants.PIT -> {
                 handleHeroMove("s", world);
                 heroStepOnPitLoseArrow(world, hero);
-//                hero.setArrows(hero.getArrows() - 1);
-//                LOGGER.info("Hero stepped on a pit and lost an arrow. Current number of arrows: {}", hero.getArrows());
-                hero.setPos(new Point(heroX + 1, heroY));
+                hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
-                handleHeroMove("s", world);
-                gameOver(world);
                 LOGGER.info("Hero stepped on Wumpus and died. Game Over");
-                hero.setPos(new Point(heroX + 1, heroY));
+                world.setGameOver(true);
             }
             case Constants.GOLD -> {
                 handleHeroMove("s", world);
-                LOGGER.info("Hero is standing on gold. Pres \"g\" to pick it up!");
+                hero.setPos(provisionalPoint);
+                LOGGER.info("Hero is standing on gold. Press \"g\" to pick it up!");
             }
             default -> {  // empty
+                world.isGameWon(provisionalPoint);
                 handleHeroMove("s", world);
-                hero.setPos(new Point(heroX + 1, heroY));
+                hero.setPos(provisionalPoint);
             }
         }
     }
@@ -84,58 +80,61 @@ public class CommandsImpl implements Commands {
     public void goRight(Hero hero, World world) {
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
-        switch (world.map[heroX][heroY + 1]) {
+        int provisionalX = heroX;
+        int provisionalY = heroY + 1;
+        Point provisionalPoint = new Point(provisionalX, provisionalY);
+        switch (world.map[provisionalX][provisionalY]) {
             case Constants.WALL -> LOGGER.info("Hero cannot go right");
             case Constants.PIT -> {
                 handleHeroMove("d", world);
                 heroStepOnPitLoseArrow(world, hero);
-//                hero.setArrows(hero.getArrows() - 1);
-//                LOGGER.info("Hero stepped on a pit and lost an arrow. Current number of arrows: {}", hero.getArrows());
-                hero.setPos(new Point(heroX, heroY + 1));
+                hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
-                handleHeroMove("d", world);
-                gameOver(world);
                 LOGGER.info("Hero stepped on Wumpus and died. Game Over");
-                hero.setPos(new Point(heroX, heroY + 1));
+                world.setGameOver(true);
             }
             case Constants.GOLD -> {
                 handleHeroMove("d", world);
-                LOGGER.info("Hero is standing on gold. Pres \"g\" to pick it up!");
+                hero.setPos(provisionalPoint);
+                LOGGER.info("Hero is standing on gold. Press \"g\" to pick it up!");
             }
             default -> {  // empty
+                world.isGameWon(provisionalPoint);
                 handleHeroMove("d", world);
-                hero.setPos(new Point(heroX, heroY + 1));
+                hero.setPos(provisionalPoint);
             }
         }
     }
+
 
     @Override
     public void goLeft(Hero hero, World world) {
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
-        switch (world.map[heroX][heroY - 1]) {
-            case Constants.WALL -> LOGGER.info("Hero cannot go right");
+        int provisionalX = heroX;
+        int provisionalY = heroY - 1;
+        Point provisionalPoint = new Point(provisionalX, provisionalY);
+        switch (world.map[provisionalX][provisionalY]) {
+            case Constants.WALL -> LOGGER.info("Hero cannot go left");
             case Constants.PIT -> {
                 handleHeroMove("a", world);
                 heroStepOnPitLoseArrow(world, hero);
-//                hero.setArrows(hero.getArrows() - 1);
-//                LOGGER.info("Hero stepped on a pit and lost an arrow. Current number of arrows: {}", hero.getArrows());
-                hero.setPos(new Point(heroX, heroY - 1));
+                hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
-                handleHeroMove("a", world);
-                gameOver(world);
                 LOGGER.info("Hero stepped on Wumpus and died. Game Over");
-                hero.setPos(new Point(heroX, heroY - 1));
+                world.setGameOver(true);
             }
             case Constants.GOLD -> {
                 handleHeroMove("a", world);
-                LOGGER.info("Hero is standing on gold. Pres \"g\" to pick it up!");
+                hero.setPos(provisionalPoint);
+                LOGGER.info("Hero is standing on gold. Press \"g\" to pick it up!");
             }
             default -> {  // empty
+                world.isGameWon(provisionalPoint);
                 handleHeroMove("a", world);
-                hero.setPos(new Point(heroX, heroY - 1));
+                hero.setPos(provisionalPoint);
             }
         }
     }
@@ -148,10 +147,17 @@ public class CommandsImpl implements Commands {
     @Override
     public void pickUpGold(Hero hero, World world) {
         // TODO solve: hero jumps two places after moving off, "H" stays on gold's previous pos after going there again
+        if (hero.getPos().equals(world.getGold().getPos())) {
             hero.setHasGold(true);
-            world.map[world.getGold().getPos().x][world.getGold().getPos().y] = Constants.EMPTY;
-            world.getEmptyFields().add(new GameObject(new Point(world.getGold().getPos().x, world.getGold().getPos().y), Constants.EMPTY));
+            int goldX = world.getGold().getPos().x;
+            int goldY = world.getGold().getPos().y;
+            world.removeGold();
+            world.gameObjects.add(new GameObject(new Point(goldX, goldY), Constants.EMPTY));
             LOGGER.info("Hero has the gold now. Go back to the starting position: {}", hero.getStartingPosition());
+        } else {
+            LOGGER.info("Hero can only pick up gold when standing on it.");
+        }
+
     }
 
     @Override
@@ -159,13 +165,11 @@ public class CommandsImpl implements Commands {
         switch (direction) {
             case N:
                 return Direction.W;
-            case E:
-                return Direction.N; // TODO duplicate problem
             case S:
                 return Direction.E;
             case W:
                 return Direction.S;
-            default:
+            default: // E
                 return Direction.N;
         }
     }
@@ -179,12 +183,12 @@ public class CommandsImpl implements Commands {
                 return Direction.S;
             case S:
                 return Direction.W;
-            case W:
-                return Direction.N; // TODO duplicate problem
-            default:
+            default: // W
                 return Direction.N;
         }
     }
+
+    boolean isThisTheFirstStep = true;
 
     @Override
     public void handleHeroMove(String command, World world) {
@@ -192,30 +196,37 @@ public class CommandsImpl implements Commands {
         int heroX = ((int) (world.getHero().getPos().getX()));
         resetObjectPositions(world, Constants.PIT);
         resetObjectPositions(world, Constants.EMPTY);
+        resetObjectPositions(world, Constants.GOLD);
+        if (isThisTheFirstStep) resetHeroStartingPositionToEmpty(world);
         switch (command) {
-            case "w" -> {
-                //world.map[heroX][heroY] = Constants.EMPTY;
-                world.map[heroX - 1][heroY] = Constants.HERO;
-            }
-            case "a" -> {
-                //world.map[heroX][heroY] = Constants.EMPTY;
-                world.map[heroX][heroY - 1] = Constants.HERO;
-            }
-            case "s" -> {
-                //world.map[heroX][heroY] = Constants.EMPTY;
-                world.map[heroX + 1][heroY] = Constants.HERO;
-            }
-            case "d" -> {
-                //world.map[heroX][heroY] = Constants.EMPTY;
-                world.map[heroX][heroY + 1] = Constants.HERO;
-            }
+            case "w" -> world.map[heroX - 1][heroY] = Constants.HERO;
+            case "a" -> world.map[heroX][heroY - 1] = Constants.HERO;
+            case "s" -> world.map[heroX + 1][heroY] = Constants.HERO;
+            case "d" -> world.map[heroX][heroY + 1] = Constants.HERO;
         }
     }
 
+    private void resetHeroStartingPositionToEmpty(World world) {
+        Hero hero = ((Hero) world.getHero());
+        int heroY = ((int) (hero.getPos().getY()));
+        int heroX = ((int) (hero.getPos().getX()));
+        if (hero.getStartingPosition() == hero.getPos()) {
+            world.map[heroX][heroY] = Constants.EMPTY;
+            world.gameObjects.add(new GameObject(new Point(heroX, heroY), Constants.EMPTY));
+        }
+        isThisTheFirstStep = false;
+    }
+
     @Override
-    public void gameOver(World world) {
-        LOGGER.info("GAME OVER");
-        world.getHero().setPos(null);
+    public boolean gameOver(World world, Hero hero) {
+        int heroY = ((int) (world.getHero().getPos().getY()));
+        int heroX = ((int) (world.getHero().getPos().getX()));
+        if (world.map[heroX][heroY].equals(Constants.WUMPUS)) {
+            LOGGER.info("**GAME OVER**");
+            world.getHero().setPos(new Point(0, 0));
+            return true;
+        }
+        return false;
     }
 
     void heroStepOnPitLoseArrow(World world, Hero hero) {
@@ -241,6 +252,14 @@ public class CommandsImpl implements Commands {
                     int emptyX = (int) empty.getPos().getX();
                     int emptyY = (int) empty.getPos().getY();
                     world.map[emptyX][emptyY] = Constants.EMPTY;
+                }
+            }
+            case Constants.GOLD -> {
+                if (!((Hero) world.getHero()).hasGold()) {
+                    Gold gold = ((Gold) world.getGold());
+                    int goldX = (int) gold.getPos().getX();
+                    int goldY = (int) gold.getPos().getY();
+                    world.map[goldX][goldY] = Constants.GOLD;
                 }
             }
         }

@@ -1,15 +1,34 @@
 package wumpus.model.objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
+import wumpus.service.game.commands.impl.CommandsImpl;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class World {
     private int N;
     public String[][] map;
-    /*
-    private Hero hero;
-    private Gold gold;*/
+    private boolean gameOver = false;
+    private boolean gameWon = false;
+    public boolean isGameWon(Point heroProvisionalPoint) {
+        Hero hero = (Hero) this.getHero();
+        return gameWon = heroProvisionalPoint.equals(hero.getStartingPosition()) && hero.hasGold();
+    }
+
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 
     public ArrayList<GameObject> gameObjects = new ArrayList<>();
 
@@ -35,6 +54,11 @@ public class World {
 
     public GameObject getGold() {
         return GenericGetObject(Constants.GOLD).get(0);
+    }
+
+    public void removeGold() {
+        Gold g = (Gold)this.getGold();
+        this.gameObjects.remove(g);
     }
 
     public GameObject getHero() {

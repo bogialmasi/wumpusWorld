@@ -30,50 +30,56 @@ public class GamePlayerImpl implements GamePlayer {
     public void startGame() throws InvalidInputException {
         world.showMap();
         Hero hero = ((Hero) (world.getHero()));
-        int heroY = ((int) (world.getHero().getPos().getY()));
-        int heroX = ((int) (world.getHero().getPos().getX()));
-        LOGGER.info("Current Hero Direction = {}", ((Hero) (world.getHero())).getDir());
+        LOGGER.info("Current Hero Direction = {}", hero.getDir());
         sc = new Scanner(System.in);
         showCommands();
         String command = sc.next();
         while (!command.equals("z")) {
-            if (world.getHero().getPos() != null) {
-                switch (command) {
-                    case "w":
-                        commands.goUp(hero, world);
-                        break;
-                    case "s":
-                        commands.goDown(hero, world);
-                        break;
-                    case "a":
-                        commands.goLeft(hero, world);
-                        break;
-                    case "d":
-                        commands.goRight(hero, world);
-                        break;
-                    case "x":
-                        commands.shoot(hero, world);
-                        break;
-                    case "g":
-                        commands.pickUpGold(hero, world);
-                        break;
-                    case "l":
-                        hero.setDir(commands.turnLeft(hero.getDir()));
-                        break;
-                    case "r":
-                        hero.setDir(commands.turnRight(hero.getDir()));
-                        break;
-                    default:
-                        LOGGER.info("Invalid input in gameplay menu");
-                        ;
-                }
+            switch (command) {
+                case "w":
+                    commands.goUp(hero, world);
+                    break;
+                case "s":
+                    commands.goDown(hero, world);
+                    break;
+                case "a":
+                    commands.goLeft(hero, world);
+                    break;
+                case "d":
+                    commands.goRight(hero, world);
+                    break;
+                case "x":
+                    commands.shoot(hero, world);
+                    break;
+                case "g":
+                    commands.pickUpGold(hero, world);
+                    break;
+                case "l":
+                    hero.setDir(commands.turnLeft(hero.getDir()));
+                    break;
+                case "r":
+                    hero.setDir(commands.turnRight(hero.getDir()));
+                    break;
+                default:
+                    LOGGER.info("Invalid input in gameplay menu");
             }
+            if (world.isGameOver()) {
+                break;
+            }
+            if(world.isGameWon()){
+                LOGGER.info("GAME WON!");
+                break;
+                // innen lehet save
+            }
+
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
             world.showMap();
             showCommands();
             command = sc.next();
         }
+        mainMenu.chooseMenu();
     }
+
 
     private void showCommands() {
         System.out.println("\nw - up , s - down , a - left, d - right" +
@@ -81,9 +87,5 @@ public class GamePlayerImpl implements GamePlayer {
                 "\nl - turn left , r - turn right" +
                 "\nz - quit level" +
                 "\npick a command!:");
-    }
-
-    public void backToMainMenu() {
-        mainMenu.chooseMenu();
     }
 }

@@ -18,6 +18,6 @@ public interface Commands {
     Direction turnLeft(Direction direction);
     Direction turnRight(Direction direction);
     void handleHeroMove(String command, World world);
-    void gameOver(World world);
+    boolean gameOver(World world, Hero hero);
 
 }
