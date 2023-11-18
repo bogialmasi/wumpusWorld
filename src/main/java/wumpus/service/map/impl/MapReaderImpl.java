@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
 import wumpus.exceptions.*;
 import wumpus.model.objects.*;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.map.MapReader;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
@@ -15,9 +16,9 @@ import java.util.ArrayList;
 public class MapReaderImpl implements MapReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(MapReaderImpl.class);
     private final MapValidator mapValidator;
-    //private final BufferedReader reader;
     private final HeroValidator heroValidator;
     private World world = null;
+    private DataBaseContextService dataBaseContextService;
 
     public MapReaderImpl(MapValidator mapValidator, HeroValidator heroValidator) {
         this.mapValidator = mapValidator;
@@ -47,14 +48,13 @@ public class MapReaderImpl implements MapReader {
         String[] header = line.split(" ");
         validateHeaderData(header);
         worldData = parseHeaderData(header);
-
         world = new World(worldData.getMapSize());
 
         hero = new Hero(new Point(worldData.getHeroRow(), worldData.getHeroCol()), worldData.getHeroDirection());
         world.gameObjects.add(hero);
         world.map[worldData.getHeroRow()][worldData.getHeroCol()] = Constants.HERO;
-
         for (int i = 1; i < lines.size(); i++) {
+            line = lines.get(i);
             String[] elements = line.split("");
             mapValidator.validateColumnSize(worldData.getMapSize(), elements.length);
             for (int column = 0; column < elements.length; column++) {
@@ -111,6 +111,7 @@ public class MapReaderImpl implements MapReader {
                     }
                 }
             }
+            row++;
         }
 
         world.showMap();
@@ -143,6 +144,7 @@ public class MapReaderImpl implements MapReader {
         mapValidator.validateAmountOfWumpuses(world);
         mapValidator.validateWallsOnEdgesOfMap(world);
     }
+
 
 }
 

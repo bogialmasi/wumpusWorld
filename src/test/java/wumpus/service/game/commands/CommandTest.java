@@ -10,6 +10,7 @@ import wumpus.model.objects.Direction;
 import wumpus.model.objects.GameObject;
 import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.game.commands.impl.CommandsImpl;
 
 import java.awt.*;
@@ -25,7 +26,7 @@ public class CommandTest {
 
     @BeforeEach
     public void setUp() {
-        commands = new CommandsImpl();
+        commands = new CommandsImpl(new DataBaseContextService());
         testmap = new String[][]{
                                 {"_", "_", "_"},
                                 {"_", "H", "_"},

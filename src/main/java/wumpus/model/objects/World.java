@@ -104,4 +104,14 @@ public class World {
         }
     }
 
+    public String parseMapToString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < this.getN(); i++) {
+            for (int j = 0; j < this.getN(); j++) {
+                builder.append(this.map[i][j]);
+            }
+            builder.append("\r\n");
+        }
+        return builder.toString();
+    }
 }

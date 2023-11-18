@@ -2,6 +2,7 @@ package wumpus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.database.PlayerRepository;
 import wumpus.service.database.PlayerRepositoryImpl;
 import wumpus.service.menu.impl.MainMenuImpl;
@@ -24,10 +25,11 @@ public class Main {
         BufferedReader reader = new BufferedReader(new FileReader(MAP_FILE_PATH));
         MapValidator mapValidator = new MapValidatorImpl();
         HeroValidator heroValidator = new HeroValidatorImpl();
+        DataBaseContextService dataBaseContextService = new DataBaseContextService();
 
         try (Connection connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")) {
-            PlayerRepository playerRepository = new PlayerRepositoryImpl(connection);
-            MainMenuImpl mainMenuImpl = new MainMenuImpl(reader, mapValidator, heroValidator, playerRepository);
+            PlayerRepository playerRepository = new PlayerRepositoryImpl(connection, dataBaseContextService);
+            MainMenuImpl mainMenuImpl = new MainMenuImpl(reader, mapValidator, heroValidator, playerRepository, dataBaseContextService);
             mainMenuImpl.startMenu();
         } catch (SQLException ex) {
             LOGGER.warn("Unexpected SQL exception: {}", ex.getMessage());

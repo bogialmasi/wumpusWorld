@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
 import wumpus.model.objects.World;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.database.PlayerRepository;
 import wumpus.service.game.commands.impl.CommandsImpl;
 import wumpus.service.game.impl.GamePlayerImpl;
@@ -13,7 +14,6 @@ import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,14 +27,21 @@ public class MainMenuImpl implements MainMenu {
     private final HeroValidator heroValidator;
     private PlayerRepository playerRepository;
     String inputUsername = null;
+    private DataBaseContextService dataBaseContextService;
+
+    @Override
+    public String getInputUsername() {
+        return inputUsername;
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuImpl.class);
 
-    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator, HeroValidator heroValidator, PlayerRepository playerRepository) {
+    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator, HeroValidator heroValidator, PlayerRepository playerRepository, DataBaseContextService dataBaseContextService) {
         this.bufferedReader = bufferedReader;
         this.mapValidator = mapValidator;
         this.heroValidator = heroValidator;
         this.playerRepository = playerRepository;
+        this.dataBaseContextService = dataBaseContextService;
     }
 
     public void startMenu() {
@@ -42,7 +49,7 @@ public class MainMenuImpl implements MainMenu {
         askForUsername();
     }
 
-    private void askForUsername() {
+    public void askForUsername() {
         sc = new Scanner(System.in);
         try {
             while (inputUsername == null) {
@@ -51,6 +58,7 @@ public class MainMenuImpl implements MainMenu {
             }
             if (inputUsername.length() > 0) {
                 LOGGER.info("\nHello, " + inputUsername + "!\n");
+                dataBaseContextService.setPlayerName(inputUsername);
                 chooseMenu();
             }
         } catch (Exception e) {
@@ -60,7 +68,6 @@ public class MainMenuImpl implements MainMenu {
         }
 
     }
-
     public void chooseMenu() {
         LOGGER.info(
                 """
@@ -101,7 +108,7 @@ public class MainMenuImpl implements MainMenu {
     @Override
     public void playGame() throws InvalidInputException {
         if (world != null) {
-            GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl(), new Scanner(System.in));
+            GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl(dataBaseContextService), new Scanner(System.in), dataBaseContextService);
             gameStarter.startGame();
         } else {
             LOGGER.warn("Load a map first to play!");
@@ -128,10 +135,9 @@ public class MainMenuImpl implements MainMenu {
         chooseMenu();
     }
     @Override
-    public void saveGameToDB() {
-        LOGGER.warn("This Function does not work yet.");
+    public void saveGameToDB() throws SQLException {
         if (world != null) {
-            // todo
+            playerRepository.insertCurrentState();
         } else {
             LOGGER.warn("Load a map first to save!");
         }
@@ -141,12 +147,9 @@ public class MainMenuImpl implements MainMenu {
     @Override
     public void loadGameFromDB() throws SQLException, InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, heroValidator);
-        /*
-        * todo loadGame should receive an ArrayList
-        *  arraylist comes from world_map in database
-        * */
         world = mapReaderImpl.readMap(playerRepository.loadGame(inputUsername));
-
+        if(world != null){LOGGER.info("Map loaded from database succesfully");}
+        else{LOGGER.warn("Map cannot be loaded from database");}
         chooseMenu();
     }
 

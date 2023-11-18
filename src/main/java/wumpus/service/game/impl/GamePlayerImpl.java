@@ -2,9 +2,12 @@ package wumpus.service.game.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wumpus.constants.Constants;
 import wumpus.exceptions.InvalidInputException;
+import wumpus.model.objects.Direction;
 import wumpus.model.objects.Hero;
 import wumpus.model.objects.World;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.game.GamePlayer;
 import wumpus.service.game.commands.Commands;
 import wumpus.service.menu.MainMenu;
@@ -18,13 +21,15 @@ public class GamePlayerImpl implements GamePlayer {
     private final MainMenu mainMenu;
     private static final Logger LOGGER = LoggerFactory.getLogger(GamePlayerImpl.class);
     private final Commands commands;
+    DataBaseContextService dataBaseContextService;
     int commandCounter = 0;
 
-    public GamePlayerImpl(World world, MainMenu mainMenu, Commands commands, Scanner sc) {
+    public GamePlayerImpl(World world, MainMenu mainMenu, Commands commands, Scanner sc, DataBaseContextService dataBaseContextService) {
         this.world = world;
         this.mainMenu = mainMenu;
         this.commands = commands;
         this.sc = sc;
+        this.dataBaseContextService = dataBaseContextService;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class GamePlayerImpl implements GamePlayer {
         sc = new Scanner(System.in);
         showCommands();
         String command = sc.next();
-        while (!command.equals("z")) {
+        while (!command.equals("z")) { // "z" goes back to main menu and lets player save or exit
             switch (command) {
                 case "w":
                     commands.goUp(world);
@@ -76,12 +81,14 @@ public class GamePlayerImpl implements GamePlayer {
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
             LOGGER.info("Number of arrows = {}", hero.getArrows());
             world.showMap();
+            dataBaseContextService.setWorldMap(world.parseMapToString());
+            dataBaseContextService.setNumberOfMoves(commandCounter);
+            setHeroData(world);
             showCommands();
             command = sc.next();
         }
         mainMenu.chooseMenu();
     }
-
 
     private void showCommands() {
         System.out.println("\nw - up , s - down , a - left, d - right" +
@@ -91,8 +98,15 @@ public class GamePlayerImpl implements GamePlayer {
                 "\npick a command!:");
     }
 
-    public int getCommandCounter(){
-        return commandCounter;
-        // todo use it to save the number of moves into database!
+    public void setHeroData(World world){
+        StringBuilder builder = new StringBuilder();
+        char heroCol = (char) (Constants.ASCII_STARTINGPOINT + world.getHero().getPos().y);
+        int heroRow = world.getHero().getPos().x+1;
+        Direction heroDir = world.getHero().getDir();
+        builder.append(world.getN()).append(" ")
+                .append(heroCol).append(" ")
+                .append(heroRow).append(" ")
+                .append(heroDir.toString());
+        dataBaseContextService.setHeroData(builder.toString());
     }
 }

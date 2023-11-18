@@ -4,11 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.constants.Constants;
 import wumpus.model.objects.*;
+import wumpus.service.database.DataBaseContextService;
 import wumpus.service.game.commands.Commands;
 
 import java.awt.*;
 
 public class CommandsImpl implements Commands {
+    private DataBaseContextService dataBaseContextService;
+
+    public CommandsImpl(DataBaseContextService dataBaseContextService) {
+        this.dataBaseContextService = dataBaseContextService;
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandsImpl.class);
     @Override
     public void goUp(World world) {
