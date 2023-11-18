@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.service.database.PlayerRepository;
 import wumpus.service.database.PlayerRepositoryImpl;
-import wumpus.service.game.commands.impl.CommandsImpl;
 import wumpus.service.menu.impl.MainMenuImpl;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
@@ -27,7 +26,7 @@ public class Main {
         HeroValidator heroValidator = new HeroValidatorImpl();
 
         try (Connection connection = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")) {
-            PlayerRepository playerRepository = new PlayerRepositoryImpl();
+            PlayerRepository playerRepository = new PlayerRepositoryImpl(connection);
             MainMenuImpl mainMenuImpl = new MainMenuImpl(reader, mapValidator, heroValidator, playerRepository);
             mainMenuImpl.startMenu();
         } catch (SQLException ex) {

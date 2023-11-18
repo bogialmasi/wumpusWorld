@@ -3,7 +3,6 @@ package wumpus.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wumpus.constants.Constants;
 import wumpus.exceptions.*;
@@ -17,71 +16,72 @@ import wumpus.service.validator.impl.HeroValidatorImpl;
 import wumpus.service.validator.impl.MapValidatorImpl;
 
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class MapReaderTest {
     MapValidatorImpl mapValidator;
     HeroValidator heroValidator;
-    @Mock
-    BufferedReader bufferedReaderMock;
     MapReaderImpl mapReaderImpl;
+    ArrayList<String> lines;
 
     @BeforeEach
     public void setup() {
+        lines = new ArrayList<>();
         mapValidator = new MapValidatorImpl();
         heroValidator = new HeroValidatorImpl();
-        mapReaderImpl = new MapReaderImpl(mapValidator, bufferedReaderMock, heroValidator);
+        mapReaderImpl = new MapReaderImpl(mapValidator, heroValidator);
     }
 
     @Test()
-    public void readMap_FirstRowInvalid() throws IOException {
+    public void readMap_FirstRowInvalid() {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6B5E");
+        lines.add("6B5E");
 
         // when
-        InvalidInputException ex = assertThrows(InvalidInputException.class, () -> mapReaderImpl.readMap());
+        InvalidInputException ex = assertThrows(InvalidInputException.class, () -> mapReaderImpl.readMap(lines));
 
         // then
         assertEquals(ex.getMessage(), "Could not read first line");
     }
 
     @Test()
-    public void readMap_InvalidSecondRow() throws IOException {
+    public void readMap_InvalidSecondRow() {
         // given
         String exMsg = "Column size is invalid!";
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWW");
+        lines.add("6 B 5 E");
+        lines.add("WWWWW");
 
         // when
-        InvalidSizeException ex = assertThrows(InvalidSizeException.class, () -> mapReaderImpl.readMap());
+        InvalidSizeException ex = assertThrows(InvalidSizeException.class, () -> mapReaderImpl.readMap(lines));
 
         // then
         assertEquals(ex.getMessage(), exMsg);
     }
 
     @Test()
-    public void readMap_InvalidHeroDirection() throws IOException {
+    public void readMap_InvalidHeroDirection() {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 K");
+        lines.add("6 B 5 K");
 
         // when
-        InvalidPositionException ex = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap());
+        InvalidPositionException ex = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap(lines));
 
         // then
         assertEquals(ex.getMessage(), "Hero's direction is invalid");
     }
 
     @Test
-    public void readMap_HappyCase_NoHeroOnMap() throws IOException, InvalidSizeException, InvalidInputException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+    public void readMap_HappyCase_NoHeroOnMap() throws InvalidSizeException, InvalidInputException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W__P_W", "WWWWWW", null);
+        lines.addAll(Arrays.asList("6 B 5 E","WWWWWW", "W___PW", "WUGP_W", "W____W", "W__P_W", "WWWWWW"));
 
         // when
-        World world = mapReaderImpl.readMap();
+        World world = mapReaderImpl.readMap(lines);
 
         // then
         assertEquals(world.getN(), 6);
@@ -96,10 +96,10 @@ public class MapReaderTest {
     @Test
     public void readMap_HeroInInputFile_WrongPosition() throws IOException {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W_HP_W", "WWWWWW", null);
+        lines.addAll(Arrays.asList("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "W_HP_W", "WWWWWW"));
 
         // when
-        InvalidPositionException exception = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap());
+        InvalidPositionException exception = assertThrows(InvalidPositionException.class, () -> mapReaderImpl.readMap(lines));
 
         // then
         assertEquals("Hero is not on the given starting position on the map.", exception.getMessage());
@@ -108,10 +108,10 @@ public class MapReaderTest {
     @Test
     public void readMap_HappyCase_HeroOnMap() throws IOException, InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         // given
-        given(bufferedReaderMock.readLine()).willReturn("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "WH_P_W", "WWWWWW", null);
+        lines.addAll(Arrays.asList("6 B 5 E", "WWWWWW", "W___PW", "WUGP_W", "W____W", "WH_P_W", "WWWWWW"));
 
         // when
-        World world = mapReaderImpl.readMap();
+        World world = mapReaderImpl.readMap(lines);
 
         // then
         Point heroPosition = world.getHero().getPos();

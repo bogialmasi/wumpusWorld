@@ -13,7 +13,10 @@ import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainMenuImpl implements MainMenu {
@@ -23,6 +26,7 @@ public class MainMenuImpl implements MainMenu {
     BufferedReader bufferedReader;
     private final HeroValidator heroValidator;
     private PlayerRepository playerRepository;
+    String inputUsername = null;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuImpl.class);
 
@@ -41,7 +45,6 @@ public class MainMenuImpl implements MainMenu {
     private void askForUsername() {
         sc = new Scanner(System.in);
         try {
-            String inputUsername = null;
             while (inputUsername == null) {
                 LOGGER.info("\nUsername: ");
                 inputUsername = sc.next();
@@ -60,11 +63,12 @@ public class MainMenuImpl implements MainMenu {
 
     public void chooseMenu() {
         LOGGER.info(
-                "\n1 - PLAY\n" +
-                        "2 - LOAD NEW FILE\n" +
-                        "3 - LOAD SAVED FILE\n" +
-                        "4 - SAVE\n" +
-                        "5 - EXIT"
+                """
+                        1 - PLAY
+                        2 - LOAD NEW FILE
+                        3 - LOAD SAVED FILE
+                        4 - SAVE
+                        5 - EXIT"""
         );
         LOGGER.info("\nChoose an option from above: ");
 
@@ -74,7 +78,7 @@ public class MainMenuImpl implements MainMenu {
             switch (chosenMenuOption) {
                 case 1 -> {
                     playGame(); // 1 - play
-                    }
+                }
                 case 2 -> {
                     uploadFromFile(); // 2 - load new file with MapReader
                 }
@@ -93,17 +97,6 @@ public class MainMenuImpl implements MainMenu {
         }
     }
 
-    @Override
-    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, IOException, InvalidObjectAmountException, HeroException, InvalidPositionException {
-        MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, bufferedReader, heroValidator);
-        world = mapReaderImpl.readMap();
-        if (world == null) {
-            LOGGER.warn("An error occured. Please try again!");
-        } else {
-            LOGGER.info("\nMap loaded succesfully. Ready to play.");
-        }
-        chooseMenu();
-    }
 
     @Override
     public void playGame() throws InvalidInputException {
@@ -116,16 +109,44 @@ public class MainMenuImpl implements MainMenu {
         }
     }
 
+
     @Override
-    public void saveGameToDB() throws InvalidInputException {
+    public void uploadFromFile() throws InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException, IOException {
+        MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, heroValidator);
+        String line = bufferedReader.readLine();
+        ArrayList<String> lines = new ArrayList<>();
+        while (line != null) {
+            lines.add(line);
+            line = bufferedReader.readLine();
+        }
+        world = mapReaderImpl.readMap(lines); // give it the String ArrayList
+        if (world == null) {
+            LOGGER.warn("An error occured. Please try again!");
+        } else {
+            LOGGER.info("\nMap loaded succesfully. Ready to play.");
+        }
+        chooseMenu();
+    }
+    @Override
+    public void saveGameToDB() {
         LOGGER.warn("This Function does not work yet.");
+        if (world != null) {
+            // todo
+        } else {
+            LOGGER.warn("Load a map first to save!");
+        }
         chooseMenu();
     }
 
     @Override
-    public void loadGameFromDB() throws InvalidInputException {
-        LOGGER.warn("This Function does not work yet.");
-        //playerRepository.createConnection(); -- createConnection no longer needed
+    public void loadGameFromDB() throws SQLException, InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
+        MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, heroValidator);
+        /*
+        * todo loadGame should receive an ArrayList
+        *  arraylist comes from world_map in database
+        * */
+        world = mapReaderImpl.readMap(playerRepository.loadGame(inputUsername));
+
         chooseMenu();
     }
 

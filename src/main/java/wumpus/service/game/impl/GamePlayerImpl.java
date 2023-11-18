@@ -18,6 +18,7 @@ public class GamePlayerImpl implements GamePlayer {
     private final MainMenu mainMenu;
     private static final Logger LOGGER = LoggerFactory.getLogger(GamePlayerImpl.class);
     private final Commands commands;
+    int commandCounter = 0;
 
     public GamePlayerImpl(World world, MainMenu mainMenu, Commands commands, Scanner sc) {
         this.world = world;
@@ -71,7 +72,7 @@ public class GamePlayerImpl implements GamePlayer {
                 break;
                 // innen lehet save
             }
-
+            commandCounter++;
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
             LOGGER.info("Number of arrows = {}", hero.getArrows());
             world.showMap();
@@ -88,5 +89,10 @@ public class GamePlayerImpl implements GamePlayer {
                 "\nl - turn left , r - turn right" +
                 "\nz - quit level" +
                 "\npick a command!:");
+    }
+
+    public int getCommandCounter(){
+        return commandCounter;
+        // todo use it to save the number of moves into database!
     }
 }
