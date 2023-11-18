@@ -37,22 +37,22 @@ public class GamePlayerImpl implements GamePlayer {
         while (!command.equals("z")) {
             switch (command) {
                 case "w":
-                    commands.goUp(hero, world);
+                    commands.goUp(world);
                     break;
                 case "s":
-                    commands.goDown(hero, world);
+                    commands.goDown(world);
                     break;
                 case "a":
-                    commands.goLeft(hero, world);
+                    commands.goLeft(world);
                     break;
                 case "d":
-                    commands.goRight(hero, world);
+                    commands.goRight(world);
                     break;
                 case "x":
-                    commands.shoot(hero, world);
+                    commands.shoot(world);
                     break;
                 case "g":
-                    commands.pickUpGold(hero, world);
+                    commands.pickUpGold(world);
                     break;
                 case "l":
                     hero.setDir(commands.turnLeft(hero.getDir()));

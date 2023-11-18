@@ -7,12 +7,13 @@ import java.util.ArrayList;
 
 public class World {
     private int N;
+
     public String[][] map;
     private boolean gameOver = false;
     private boolean gameWon = false;
 
     public boolean isGameWon(Point heroProvisionalPoint) {
-        Hero hero = (Hero) this.getHero();
+        Hero hero = this.getHero();
         return gameWon = heroProvisionalPoint.equals(hero.getStartingPosition()) && hero.hasGold();
     }
 
@@ -70,8 +71,8 @@ public class World {
         }
     }
 
-    public GameObject getHero() {
-        return GenericGetObject(Constants.HERO).get(0);
+    public Hero getHero() {
+        return (Hero) GenericGetObject(Constants.HERO).get(0);
     }
 
     public World(int mapSize) {

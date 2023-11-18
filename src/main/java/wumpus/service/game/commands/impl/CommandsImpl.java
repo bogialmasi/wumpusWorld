@@ -10,12 +10,9 @@ import java.awt.*;
 
 public class CommandsImpl implements Commands {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandsImpl.class);
-
-    /*
-        // TODO tests for goUp, goDown, goLeft, goRight!
-            */
     @Override
-    public void goUp(Hero hero, World world) {
+    public void goUp(World world) {
+        Hero hero = world.getHero();
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
         int provisionalX = heroX - 1;
@@ -25,7 +22,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go up");
             case Constants.PIT -> {
                 handleHeroMove("w", world);
-                heroLoseArrow(world, hero);
+                heroLoseArrow(world);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -46,7 +43,8 @@ public class CommandsImpl implements Commands {
     }
 
     @Override
-    public void goDown(Hero hero, World world) {
+    public void goDown(World world) {
+        Hero hero = world.getHero();
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
         int provisionalX = heroX + 1;
@@ -56,7 +54,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go down");
             case Constants.PIT -> {
                 handleHeroMove("s", world);
-                heroLoseArrow(world, hero);
+                heroLoseArrow(world);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -77,7 +75,8 @@ public class CommandsImpl implements Commands {
     }
 
     @Override
-    public void goRight(Hero hero, World world) {
+    public void goRight(World world) {
+        Hero hero = world.getHero();
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
         int provisionalX = heroX;
@@ -87,7 +86,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go right");
             case Constants.PIT -> {
                 handleHeroMove("d", world);
-                heroLoseArrow(world, hero);
+                heroLoseArrow(world);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -109,7 +108,8 @@ public class CommandsImpl implements Commands {
 
 
     @Override
-    public void goLeft(Hero hero, World world) {
+    public void goLeft(World world) {
+        Hero hero = world.getHero();
         int heroY = ((int) (world.getHero().getPos().getY()));
         int heroX = ((int) (world.getHero().getPos().getX()));
         int provisionalX = heroX;
@@ -119,7 +119,7 @@ public class CommandsImpl implements Commands {
             case Constants.WALL -> LOGGER.info("Hero cannot go left");
             case Constants.PIT -> {
                 handleHeroMove("a", world);
-                heroLoseArrow(world, hero);
+                heroLoseArrow(world);
                 hero.setPos(provisionalPoint);
             }
             case Constants.WUMPUS -> {
@@ -140,10 +140,11 @@ public class CommandsImpl implements Commands {
     }
 
     @Override
-    public void shoot(Hero hero, World world) {
+    public void shoot(World world) {
+        Hero hero = world.getHero();
         int arrowPosX = (int) hero.getPos().getX();
         int arrowPosY = (int) hero.getPos().getY();
-        heroLoseArrow(world, hero);
+        heroLoseArrow(world);
         switch (hero.getDir()) {
             case N:
                 LOGGER.info("Hero shoots north.");
@@ -194,7 +195,8 @@ public class CommandsImpl implements Commands {
 
 
     @Override
-    public void pickUpGold(Hero hero, World world) {
+    public void pickUpGold(World world) {
+        Hero hero = world.getHero();
         if (hero.getPos().equals(world.getGold().getPos())) {
             hero.setHasGold(true);
             int goldX = world.getGold().getPos().x;
@@ -255,7 +257,7 @@ public class CommandsImpl implements Commands {
     }
 
     private void resetHeroStartingPositionToEmpty(World world) {
-        Hero hero = ((Hero) world.getHero());
+        Hero hero = world.getHero();
         int heroY = ((int) (hero.getPos().getY()));
         int heroX = ((int) (hero.getPos().getX()));
         if (hero.getStartingPosition() == hero.getPos()) {
@@ -265,19 +267,8 @@ public class CommandsImpl implements Commands {
         isThisTheFirstStep = false;
     }
 
-    @Override
-    public boolean gameOver(World world, Hero hero) {
-        int heroY = ((int) (world.getHero().getPos().getY()));
-        int heroX = ((int) (world.getHero().getPos().getX()));
-        if (world.map[heroX][heroY].equals(Constants.WUMPUS)) {
-            LOGGER.info("**GAME OVER**");
-            world.getHero().setPos(new Point(0, 0));
-            return true;
-        }
-        return false;
-    }
-
-    void heroLoseArrow(World world, Hero hero) {
+    void heroLoseArrow(World world) {
+        Hero hero = world.getHero();
         if (hero.getArrows() > 0) {
             hero.setArrows(hero.getArrows() - 1);
             LOGGER.info("Hero lost an arrow. Current number of arrows = {}", hero.getArrows());
@@ -303,7 +294,7 @@ public class CommandsImpl implements Commands {
                 }
             }
             case Constants.GOLD -> {
-                if (!((Hero) world.getHero()).hasGold()) {
+                if (!world.getHero().hasGold()) {
                     Gold gold = ((Gold) world.getGold());
                     int goldX = (int) gold.getPos().getX();
                     int goldY = (int) gold.getPos().getY();

@@ -9,15 +9,13 @@ import wumpus.model.objects.World;
 import java.awt.*;
 
 public interface Commands {
-    void goUp(Hero hero, World world) throws InvalidInputException;
-    void goDown(Hero hero, World world);
-    void goLeft(Hero hero, World world);
-    void goRight(Hero hero, World world);
-    void shoot(Hero hero, World world);
-    void pickUpGold(Hero hero, World world);
+    void goUp(World world) throws InvalidInputException;
+    void goDown(World world);
+    void goLeft(World world);
+    void goRight(World world);
+    void shoot(World world);
+    void pickUpGold(World world);
     Direction turnLeft(Direction direction);
     Direction turnRight(Direction direction);
     void handleHeroMove(String command, World world);
-    boolean gameOver(World world, Hero hero);
-
 }
