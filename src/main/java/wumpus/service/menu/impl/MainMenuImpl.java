@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.exceptions.*;
 import wumpus.model.objects.World;
+import wumpus.service.database.PlayerRepository;
 import wumpus.service.game.commands.impl.CommandsImpl;
 import wumpus.service.game.impl.GamePlayerImpl;
 import wumpus.service.map.impl.MapReaderImpl;
@@ -20,14 +21,16 @@ public class MainMenuImpl implements MainMenu {
     World world;
     private final MapValidator mapValidator;
     BufferedReader bufferedReader;
-    private HeroValidator heroValidator;
+    private final HeroValidator heroValidator;
+    private PlayerRepository playerRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuImpl.class);
 
-    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator, HeroValidator heroValidator) {
+    public MainMenuImpl(BufferedReader bufferedReader, MapValidator mapValidator, HeroValidator heroValidator, PlayerRepository playerRepository) {
         this.bufferedReader = bufferedReader;
         this.mapValidator = mapValidator;
         this.heroValidator = heroValidator;
+        this.playerRepository = playerRepository;
     }
 
     public void startMenu() {
@@ -108,7 +111,7 @@ public class MainMenuImpl implements MainMenu {
             GamePlayerImpl gameStarter = new GamePlayerImpl(world, this, new CommandsImpl(), new Scanner(System.in));
             gameStarter.startGame();
         } else {
-            LOGGER.info("Load a map first to play!");
+            LOGGER.warn("Load a map first to play!");
             chooseMenu();
         }
     }
@@ -122,6 +125,7 @@ public class MainMenuImpl implements MainMenu {
     @Override
     public void loadGameFromDB() throws InvalidInputException {
         LOGGER.warn("This Function does not work yet.");
+        //playerRepository.createConnection(); -- createConnection no longer needed
         chooseMenu();
     }
 
