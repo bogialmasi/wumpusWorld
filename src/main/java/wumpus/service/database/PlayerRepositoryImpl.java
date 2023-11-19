@@ -3,11 +3,10 @@ package wumpus.service.database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PlayerRepositoryImpl implements PlayerRepository {
 
@@ -48,7 +47,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         String map = dataBaseContextService.getWorldMap();
         String worldMap = heroData + "\r\n" + map;
         int numberOfMoves = dataBaseContextService.getNumberOfMoves();
-        String query_InsertCurrentState = String.format("INSERT INTO PLAYER (PLAYER_NAME, WORLD_MAP, NUMBER_OF_MOVES) VALUES ('%S','%s',%d);", playerName, worldMap, numberOfMoves);
+        String query_InsertCurrentState = String.format("INSERT INTO PLAYER (PLAYER_NAME, WORLD_MAP, NUMBER_OF_MOVES) VALUES ('%s','%s',%d);", playerName, worldMap, numberOfMoves);
         Statement statement = connection.createStatement();
         statement.executeUpdate(query_InsertCurrentState);
         LOGGER.info("Saved to database");
@@ -56,20 +55,23 @@ public class PlayerRepositoryImpl implements PlayerRepository {
 
     @Override
     public ArrayList<String> loadGame(String username) throws SQLException {
-        String query_GetWorldMapThatMatchesUsername = String.format("SELECT world_map FROM PLAYER WHERE player_name='%s';", username.toUpperCase());
+        String query_GetWorldMapThatMatchesUsername = String.format("SELECT world_map FROM PLAYER WHERE player_name='%s';", username);
         Statement statement = connection.createStatement();
-        ArrayList<String> lines = new ArrayList<>();
         ResultSet resultSet = statement.executeQuery(query_GetWorldMapThatMatchesUsername);
         if (resultSet != null) {
             while (resultSet.next()) {
-                lines.add(resultSet.toString());
-                /*
-                * TODO result not correct, only one line is returned - correction needed
-                *  */
+                String worldMapData = resultSet.getString(1);
+                return splitString(worldMapData);
             }
         } else {
             LOGGER.warn("Unable to load game from database");
         }
-        return lines;
+        return null;
+    }
+
+    private ArrayList<String> splitString(String stringArrayList){
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList(stringArrayList.split("\r\n")));
+        return list;
     }
 }

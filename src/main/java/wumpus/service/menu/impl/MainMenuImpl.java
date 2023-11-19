@@ -69,13 +69,12 @@ public class MainMenuImpl implements MainMenu {
 
     }
     public void chooseMenu() {
-        LOGGER.info(
-                """
-                        1 - PLAY
-                        2 - LOAD NEW FILE
-                        3 - LOAD SAVED FILE
-                        4 - SAVE
-                        5 - EXIT"""
+        LOGGER.info("\n" +
+                "1 - PLAY\n" +
+                "2 - LOAD NEW FILE\n" +
+                "3 - LOAD SAVED FILE\n" +
+                "4 - SAVE\n" +
+                "5 - EXIT"
         );
         LOGGER.info("\nChoose an option from above: ");
 

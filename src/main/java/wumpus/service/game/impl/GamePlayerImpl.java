@@ -78,6 +78,7 @@ public class GamePlayerImpl implements GamePlayer {
                 // innen lehet save
             }
             commandCounter++;
+            LOGGER.info("Current number of moves = {}", commandCounter);
             LOGGER.info("Current Hero Direction = {}", hero.getDir());
             LOGGER.info("Number of arrows = {}", hero.getArrows());
             world.showMap();

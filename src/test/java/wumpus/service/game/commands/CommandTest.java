@@ -6,10 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import wumpus.constants.Constants;
 import wumpus.exceptions.InvalidInputException;
-import wumpus.model.objects.Direction;
-import wumpus.model.objects.GameObject;
-import wumpus.model.objects.Hero;
-import wumpus.model.objects.World;
+import wumpus.model.objects.*;
 import wumpus.service.database.DataBaseContextService;
 import wumpus.service.game.commands.impl.CommandsImpl;
 
@@ -28,21 +25,30 @@ public class CommandTest {
     public void setUp() {
         commands = new CommandsImpl(new DataBaseContextService());
         testmap = new String[][]{
-                                {"_", "_", "_"},
-                                {"_", "H", "_"},
-                                {"_", "_", "_"}};
+                                {"_", "_", "_", "_"},
+                                {"_", "H", "_", "U"},
+                                {"W", "_", "_", "P"},
+                                {"_", "G", "_", "_"}};
 
-        world = new World(5);
+        world = new World(4);
         world.map = testmap;
         world.gameObjects.add(new GameObject(new Point(0,0), Constants.EMPTY));
         world.gameObjects.add(new GameObject(new Point(0,1), Constants.EMPTY));
         world.gameObjects.add(new GameObject(new Point(0,2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(0,3), Constants.EMPTY));
         world.gameObjects.add(new GameObject(new Point(1,0), Constants.EMPTY));
         world.gameObjects.add(new Hero(new Point(1,1), Direction.N));
         world.gameObjects.add(new GameObject(new Point(1,2), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(2,0), Constants.EMPTY));
+        world.gameObjects.add(new Wumpus(new Point(1,3)));
+        world.gameObjects.add(new Wall(new Point(2,0)));
         world.gameObjects.add(new GameObject(new Point(2,1), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(1,1), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(2,2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(2,3), Constants.PIT));
+        world.gameObjects.add(new GameObject(new Point(3,0), Constants.EMPTY));
+        world.gameObjects.add(new Gold(new Point(3,1)));
+        world.gameObjects.add(new GameObject(new Point(3,2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(3,3), Constants.EMPTY));
+
     }
 
     @Test
@@ -92,14 +98,27 @@ public class CommandTest {
         Direction dir = commands.turnRight(Direction.S);
         assertEquals(dir, Direction.W);
     }
+
     @Test
     public void commands_goUp_toEmpty() throws InvalidInputException {
         commands.goUp(world);
-        assertEquals(testmap[0][1], Constants.HERO);
+        assertEquals(world.map[0][1], Constants.HERO);
     }
     @Test
-    public void commands_goDown_toEmpty() throws InvalidInputException {
+    public void commands_goDown_toEmpty() {
         commands.goDown(world);
-        assertEquals(testmap[1][2], Constants.HERO);
+        assertEquals(world.map[2][1], Constants.HERO);
+    }
+
+    @Test
+    public void commands_goLeft_toEmpty() {
+        commands.goLeft(world);
+        assertEquals(world.map[1][0], Constants.HERO);
+    }
+
+    @Test
+    public void goRight() {
+        commands.goRight(world);
+        assertEquals(world.map[1][2], Constants.HERO);
     }
 }
