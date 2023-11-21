@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wumpus.service.database.DataBaseContextService;
 import wumpus.service.database.PlayerRepository;
-import wumpus.service.database.PlayerRepositoryImpl;
+import wumpus.service.database.impl.PlayerRepositoryImpl;
 import wumpus.service.menu.impl.MainMenuImpl;
 import wumpus.service.validator.HeroValidator;
 import wumpus.service.validator.MapValidator;

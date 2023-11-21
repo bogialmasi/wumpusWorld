@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import wumpus.service.database.impl.PlayerRepositoryImpl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,19 +16,11 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class PlayerRepositoryTest {
-
-    /**
-     *         String query_InsertCurrentState = String.format("INSERT INTO PLAYER (PLAYER_NAME, WORLD_MAP, NUMBER_OF_MOVES) VALUES ('%s','%s',%d);", playerName, worldMap, numberOfMoves);
-     *         Statement statement = connection.createStatement();
-     *         statement.executeUpdate(query_InsertCurrentState);
-     */
     @Mock
     Connection connection;
     @Mock
@@ -38,15 +30,12 @@ public class PlayerRepositoryTest {
     PlayerRepository playerRepository;
     @Mock
     ResultSet resultSet;
+
     @BeforeEach
     void setUp() {
         playerRepository = new PlayerRepositoryImpl(connection, dataBaseContextService);
     }
 
-    @Test
-    public void playerRepository_insertCurrentState() throws SQLException {
-
-    }
 
     @Test
     public void playerRepository_loadGame() throws SQLException {
@@ -66,5 +55,17 @@ public class PlayerRepositoryTest {
         verify(connection).createStatement();
         verify(statement).executeQuery(any(String.class));
         assertEquals(testMapList, returnedMap);
+    }
+
+    @Test
+    public void playerRepository_insertCurrentState() throws SQLException {
+        // given
+        given(connection.createStatement()).willReturn(statement);
+        given(statement.executeUpdate(any(String.class))).willReturn(0);
+        // when
+        playerRepository.insertCurrentState();
+        // then
+        verify(connection).createStatement();
+        verify(statement).executeUpdate(any(String.class));
     }
 }

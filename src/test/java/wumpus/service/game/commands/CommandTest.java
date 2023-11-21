@@ -12,7 +12,7 @@ import wumpus.service.game.commands.impl.CommandsImpl;
 
 import java.awt.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CommandTest {
@@ -130,13 +130,18 @@ public class CommandTest {
 
     @Test
     public void commands_pickUpGold(){
-        // hero has to go down twice to step onto gold
         commands.goDown(world);
         commands.goDown(world);
 
         commands.pickUpGold(world);
-        assertEquals(world.getHero().hasGold(), true);
+        assertTrue(world.getHero().hasGold());
         assertEquals(world.map[3][1], Constants.HERO);
+    }
+
+    @Test
+    public void commands_pickUpGold_noGoldPickUp(){
+        commands.pickUpGold(world);
+        assertFalse(world.getHero().hasGold());
     }
 
 }

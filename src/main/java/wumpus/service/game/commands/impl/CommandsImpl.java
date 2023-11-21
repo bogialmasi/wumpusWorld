@@ -10,13 +10,14 @@ import wumpus.service.game.commands.Commands;
 import java.awt.*;
 
 public class CommandsImpl implements Commands {
-    private DataBaseContextService dataBaseContextService;
+    private final DataBaseContextService dataBaseContextService;
 
     public CommandsImpl(DataBaseContextService dataBaseContextService) {
         this.dataBaseContextService = dataBaseContextService;
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandsImpl.class);
+
     @Override
     public void goUp(World world) {
         Hero hero = world.getHero();
