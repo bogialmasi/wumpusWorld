@@ -25,29 +25,29 @@ public class CommandTest {
     public void setUp() {
         commands = new CommandsImpl(new DataBaseContextService());
         testmap = new String[][]{
-                                {"_", "_", "_", "_"},
-                                {"_", "H", "_", "U"},
-                                {"W", "_", "_", "P"},
-                                {"_", "G", "_", "_"}};
+                {"_", "_", "_", "_"},
+                {"_", "H", "_", "U"},
+                {"W", "_", "_", "P"},
+                {"_", "G", "_", "_"}};
 
         world = new World(4);
         world.map = testmap;
-        world.gameObjects.add(new GameObject(new Point(0,0), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(0,1), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(0,2), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(0,3), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(1,0), Constants.EMPTY));
-        world.gameObjects.add(new Hero(new Point(1,1), Direction.N));
-        world.gameObjects.add(new GameObject(new Point(1,2), Constants.EMPTY));
-        world.gameObjects.add(new Wumpus(new Point(1,3)));
-        world.gameObjects.add(new Wall(new Point(2,0)));
-        world.gameObjects.add(new GameObject(new Point(2,1), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(2,2), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(2,3), Constants.PIT));
-        world.gameObjects.add(new GameObject(new Point(3,0), Constants.EMPTY));
-        world.gameObjects.add(new Gold(new Point(3,1)));
-        world.gameObjects.add(new GameObject(new Point(3,2), Constants.EMPTY));
-        world.gameObjects.add(new GameObject(new Point(3,3), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(0, 0), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(0, 1), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(0, 2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(0, 3), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(1, 0), Constants.EMPTY));
+        world.gameObjects.add(new Hero(new Point(1, 1), Direction.E));
+        world.gameObjects.add(new GameObject(new Point(1, 2), Constants.EMPTY));
+        world.gameObjects.add(new Wumpus(new Point(1, 3)));
+        world.gameObjects.add(new Wall(new Point(2, 0)));
+        world.gameObjects.add(new GameObject(new Point(2, 1), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(2, 2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(2, 3), Constants.PIT));
+        world.gameObjects.add(new GameObject(new Point(3, 0), Constants.EMPTY));
+        world.gameObjects.add(new Gold(new Point(3, 1)));
+        world.gameObjects.add(new GameObject(new Point(3, 2), Constants.EMPTY));
+        world.gameObjects.add(new GameObject(new Point(3, 3), Constants.EMPTY));
 
     }
 
@@ -104,6 +104,7 @@ public class CommandTest {
         commands.goUp(world);
         assertEquals(world.map[0][1], Constants.HERO);
     }
+
     @Test
     public void commands_goDown_toEmpty() {
         commands.goDown(world);
@@ -117,8 +118,25 @@ public class CommandTest {
     }
 
     @Test
-    public void goRight() {
+    public void commands_goRight_toEmpty() {
         commands.goRight(world);
         assertEquals(world.map[1][2], Constants.HERO);
     }
+    @Test
+    public void commands_shoot(){
+        commands.shoot(world);
+        assertEquals(world.map[1][3], Constants.EMPTY);
+    }
+
+    @Test
+    public void commands_pickUpGold(){
+        // hero has to go down twice to step onto gold
+        commands.goDown(world);
+        commands.goDown(world);
+
+        commands.pickUpGold(world);
+        assertEquals(world.getHero().hasGold(), true);
+        assertEquals(world.map[3][1], Constants.HERO);
+    }
+
 }
