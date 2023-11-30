@@ -17,10 +17,6 @@ import wumpus.service.menu.MainMenu;
 import java.awt.*;
 import java.util.Scanner;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-
 @ExtendWith(MockitoExtension.class)
 public class GamePlayerTest {
     Commands commands;

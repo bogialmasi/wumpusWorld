@@ -75,7 +75,6 @@ public class GamePlayerImpl implements GamePlayer {
             if(world.isGameWon()){
                 LOGGER.info("GAME WON!");
                 break;
-                // innen lehet save
             }
             commandCounter++;
             LOGGER.info("Current number of moves = {}", commandCounter);

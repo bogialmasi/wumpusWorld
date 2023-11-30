@@ -36,6 +36,7 @@ public class MapReaderImpl implements MapReader {
             case Constants.SOUTH:
                 return Direction.S;
             default:
+                LOGGER.error("Hero's direction is invalid. Exception = ");
                 throw new InvalidPositionException("Hero's direction is invalid");
         }
     }
