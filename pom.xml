@@ -80,16 +80,134 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
+            <!--
+            A `jacoco-maven-plugin` lehet ellenőriztetni, hogy mekkora a forráskód lefedetssége a tesztek által.
+            -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+                <configuration>
+                    <excludes>
+                        <!-- these classes don't have business logic -->
+                        <exclude>wumpus/exceptions/*</exclude>
+                        <exclude>wumpus/constants/*</exclude>
+                        <exclude>wumpus/model/objects/*</exclude>
+                        <!-- main class -->
+                        <exclude>wumpus/Main.class</exclude>
+                        <!-- this class is within business logic but only has getter setter methods-->
+                        <exclude>wumpus/service/database/DataBaseContextService.java</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <!-- A `counter` tag-el lehet beállítani, hogy milyen legyen a lefedettség ellenőrzésre.
+                                             Maradhat a `LINE`-->
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <!-- A `minimum` tag-el lehet állítani, hogy mekkora lefedettség szükséges, hogy sikeres legyen a build.
+                                             értéke: 0 <= x <= 1 lehet, 0.8 egyenlő 80%-al. -->
+                                            <minimum>0.7</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            out
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.1.2</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>9.0.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- A `maven-site-plugin` plugin felelős azért, hogy report html fájlokat készítsen.
+            A `/target/site/jacoco/index.html` fájlt megnyitva lehet megtekinteni az elkészített html riport fájlt a tesztek eredményével kapcsolatban. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <!-- A `maven-checkstyle-plugin` felelős azért, hogy statikusan ellenőrizze a kódbázis formázását.
+            Ehhez a projektben lévő módosított `checkstyle.xml` konfigurációs fájlt használja fel. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>
