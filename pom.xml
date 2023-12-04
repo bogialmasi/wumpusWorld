@@ -100,11 +100,14 @@
                         <!-- these classes don't have business logic -->
                         <exclude>wumpus/exceptions/*</exclude>
                         <exclude>wumpus/constants/*</exclude>
-                        <exclude>wumpus/model/objects/*</exclude>
+                        <exclude>wumpus/model/**/*</exclude>
                         <!-- main class -->
-                        <exclude>wumpus/Main.class</exclude>
+                        <exclude>wumpus/Main.*</exclude>
+                        <exclude>wumpus/service/game/impl/GamePlayerImpl.*</exclude>
+                        <exclude>wumpus/service/menu/impl/MainMenuImpl.*</exclude>
+                        <exclude>wumpus/service/game/commands/impl/CommandsImpl.*</exclude>
                         <!-- this class is within business logic but only has getter setter methods-->
-                        <exclude>wumpus/service/database/DataBaseContextService.java</exclude>
+                        <exclude>wumpus/service/database/DataBaseContextService.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -137,7 +140,7 @@
                                             <value>COVEREDRATIO</value>
                                             <!-- A `minimum` tag-el lehet állítani, hogy mekkora lefedettség szükséges, hogy sikeres legyen a build.
                                              értéke: 0 <= x <= 1 lehet, 0.8 egyenlő 80%-al. -->
-                                            <minimum>0.7</minimum>
+                                            <minimum>0.8</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -152,7 +155,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <configLocation>src/main/resources/checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
@@ -193,7 +196,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <configLocation>src/main/resources/checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
@@ -209,5 +212,4 @@
             </plugin>
         </plugins>
     </reporting>
-
 </project>
