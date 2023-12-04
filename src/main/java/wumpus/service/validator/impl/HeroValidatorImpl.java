@@ -12,11 +12,11 @@ public class HeroValidatorImpl implements HeroValidator {
 
     @Override
     public void validateHeroPositionIsInsideMap(World world, int row, int col) throws HeroException {
-        if (row >= world.getN()-1 || row <= 0) {
+        if (row >= world.getN() - 1 || row <= 0) {
             throw new HeroException("The Hero is standing in an invalid row");
 
         }
-        if (col >= world.getN()-1 || col <= 0) {
+        if (col >= world.getN() - 1 || col <= 0) {
             throw new HeroException("The Hero is standing in an invalid column");
         }
     }

@@ -255,7 +255,9 @@ public class CommandsImpl implements Commands {
         resetObjectPositions(world, Constants.PIT);
         resetObjectPositions(world, Constants.EMPTY);
         resetObjectPositions(world, Constants.GOLD);
-        if (isThisTheFirstStep) resetHeroStartingPositionToEmpty(world);
+        if (isThisTheFirstStep) {
+            resetHeroStartingPositionToEmpty(world);
+        }
         switch (command) {
             case "w" -> world.map[heroX - 1][heroY] = Constants.HERO;
             case "a" -> world.map[heroX][heroY - 1] = Constants.HERO;

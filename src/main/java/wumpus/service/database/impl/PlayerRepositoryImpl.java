@@ -31,17 +31,17 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         String map = dataBaseContextService.getWorldMap();
         String worldMap = heroData + "\r\n" + map;
         int numberOfMoves = dataBaseContextService.getNumberOfMoves();
-        String query_InsertCurrentState = String.format("INSERT INTO PLAYER (PLAYER_NAME, WORLD_MAP, NUMBER_OF_MOVES) VALUES ('%s','%s',%d);", playerName, worldMap, numberOfMoves);
+        String queryInsertCurrentState = String.format("INSERT INTO PLAYER (PLAYER_NAME, WORLD_MAP, NUMBER_OF_MOVES) VALUES ('%s','%s',%d);", playerName, worldMap, numberOfMoves);
         Statement statement = connection.createStatement();
-        statement.executeUpdate(query_InsertCurrentState);
+        statement.executeUpdate(queryInsertCurrentState);
         LOGGER.info("Saved to database");
     }
 
     @Override
     public ArrayList<String> loadGame(String username) throws SQLException {
-        String query_GetWorldMapThatMatchesUsername = String.format("SELECT world_map FROM PLAYER WHERE player_name='%s';", username);
+        String queryGetWorldMapThatMatchesUsername = String.format("SELECT world_map FROM PLAYER WHERE player_name='%s';", username);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query_GetWorldMapThatMatchesUsername);
+        ResultSet resultSet = statement.executeQuery(queryGetWorldMapThatMatchesUsername);
         if (resultSet != null) {
             while (resultSet.next()) {
                 String worldMapData = resultSet.getString(1);
@@ -53,7 +53,7 @@ public class PlayerRepositoryImpl implements PlayerRepository {
         return null;
     }
 
-    private ArrayList<String> splitString(String stringArrayList){
+    private ArrayList<String> splitString(String stringArrayList) {
         ArrayList<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(stringArrayList.split("\r\n")));
         return list;

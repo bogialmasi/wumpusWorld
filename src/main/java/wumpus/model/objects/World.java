@@ -36,23 +36,23 @@ public class World {
     }
 
     public ArrayList<GameObject> getWalls() {
-        return GenericGetObject(Constants.WALL);
+        return genericGetObject(Constants.WALL);
     }
 
     public ArrayList<GameObject> getWumpuses() {
-        return GenericGetObject(Constants.WUMPUS);
+        return genericGetObject(Constants.WUMPUS);
     }
 
     public ArrayList<GameObject> getPits() {
-        return GenericGetObject(Constants.PIT);
+        return genericGetObject(Constants.PIT);
     }
 
     public ArrayList<GameObject> getEmptyFields() {
-        return GenericGetObject(Constants.EMPTY);
+        return genericGetObject(Constants.EMPTY);
     }
 
     public GameObject getGold() {
-        return GenericGetObject(Constants.GOLD).get(0);
+        return genericGetObject(Constants.GOLD).get(0);
     }
 
     public void removeGold() {
@@ -72,7 +72,7 @@ public class World {
     }
 
     public Hero getHero() {
-        return (Hero) GenericGetObject(Constants.HERO).get(0);
+        return (Hero) genericGetObject(Constants.HERO).get(0);
     }
 
     public World(int mapSize) {
@@ -84,7 +84,7 @@ public class World {
         return N;
     }
 
-    public ArrayList<GameObject> GenericGetObject(String type) {
+    public ArrayList<GameObject> genericGetObject(String type) {
         ArrayList<GameObject> objects = new ArrayList<>();
         for (int i = 0; i < this.gameObjects.size(); i++) {
             GameObject object = this.gameObjects.get(i);

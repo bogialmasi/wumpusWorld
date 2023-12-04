@@ -68,6 +68,7 @@ public class MainMenuImpl implements MainMenu {
         }
 
     }
+
     public void chooseMenu() {
         LOGGER.info("\n" +
                 "1 - PLAY\n" +
@@ -133,6 +134,7 @@ public class MainMenuImpl implements MainMenu {
         }
         chooseMenu();
     }
+
     @Override
     public void saveGameToDB() throws SQLException {
         if (world != null) {
@@ -147,8 +149,11 @@ public class MainMenuImpl implements MainMenu {
     public void loadGameFromDB() throws SQLException, InvalidInputException, InvalidSizeException, InvalidObjectAmountException, HeroException, InvalidPositionException {
         MapReaderImpl mapReaderImpl = new MapReaderImpl(mapValidator, heroValidator);
         world = mapReaderImpl.readMap(playerRepository.loadGame(inputUsername));
-        if(world != null){LOGGER.info("Map loaded from database succesfully");}
-        else{LOGGER.warn("Map cannot be loaded from database");}
+        if (world != null) {
+            LOGGER.info("Map loaded from database succesfully");
+        } else {
+            LOGGER.warn("Map cannot be loaded from database");
+        }
         chooseMenu();
     }
 

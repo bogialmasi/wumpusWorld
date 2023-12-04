@@ -21,6 +21,7 @@ import java.sql.SQLException;
 public class Main {
     private static final String MAP_FILE_PATH = "src/main/resources/wumpuszinput.txt";
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) throws FileNotFoundException, SQLException {
         BufferedReader reader = new BufferedReader(new FileReader(MAP_FILE_PATH));
         MapValidator mapValidator = new MapValidatorImpl();

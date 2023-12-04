@@ -16,6 +16,7 @@ public class WorldData {
     public int getMapSize() {
         return mapSize;
     }
+
     public int getHeroRow() {
         return heroRow;
     }

@@ -72,7 +72,7 @@ public class GamePlayerImpl implements GamePlayer {
             if (world.isGameOver()) {
                 break;
             }
-            if(world.isGameWon()){
+            if (world.isGameWon()) {
                 LOGGER.info("GAME WON!");
                 break;
             }
@@ -98,10 +98,10 @@ public class GamePlayerImpl implements GamePlayer {
                 "\npick a command!:");
     }
 
-    public void setHeroData(World world){
+    public void setHeroData(World world) {
         StringBuilder builder = new StringBuilder();
         char heroCol = (char) (Constants.ASCII_STARTINGPOINT + world.getHero().getPos().y);
-        int heroRow = world.getHero().getPos().x+1;
+        int heroRow = world.getHero().getPos().x + 1;
         Direction heroDir = world.getHero().getDir();
         builder.append(world.getN()).append(" ")
                 .append(heroCol).append(" ")
