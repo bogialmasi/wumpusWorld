@@ -104,8 +104,7 @@
                         <!-- main class -->
                         <exclude>wumpus/Main.*</exclude>
                         <exclude>wumpus/service/game/impl/GamePlayerImpl.*</exclude>
-                        <exclude>wumpus/service/menu/impl/MainMenuImpl.*</exclude>
-                        <exclude>wumpus/service/game/commands/impl/CommandsImpl.*</exclude>
+
                         <!-- this class is within business logic but only has getter setter methods-->
                         <exclude>wumpus/service/database/DataBaseContextService.*</exclude>
                     </excludes>
